@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="no">
 <head>
 <meta charset="UTF-8">
@@ -106,7 +106,7 @@
     gap: 4px; cursor: pointer; transition: all .2s;
   }
   .nav-icon { font-size: 22px; transition: transform .2s; }
-  .nav-label { font-size: 10px; font-weight: 700; color: #4a7a54; letter-spacing: .5px; }
+  .nav-label { font-size: 9px; font-weight: 700; color: #4a7a54; letter-spacing: .3px; }
   .nav-item.active .nav-label { color: var(--green); }
   .nav-item.active .nav-icon { transform: scale(1.15); }
   .nav-item:active .nav-icon { transform: scale(.9); }
@@ -996,6 +996,56 @@
       </div>
     </div>
 
+    <!-- ════════ SCREEN: INFO ════════ -->
+    <div class="screen" id="s-info">
+      <div class="status-bar">
+        <span>09:41</span>
+        <div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--green);font-weight:700;">BioBin X</div>
+        <div class="status-icons">📶 🔋</div>
+      </div>
+      <div class="page-header">
+        <div class="page-title">ℹ️ Info</div>
+        <div class="page-sub">Om BioBin X-systemet</div>
+      </div>
+
+      <!-- Logo card -->
+      <div class="card" style="text-align:center;background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(163,230,53,.04));border-color:rgba(74,222,128,.2);">
+        <div style="font-family:'Space Mono',monospace;font-size:26px;font-weight:700;color:var(--green);letter-spacing:-1px;">BioBin X</div>
+        <div style="font-size:13px;font-weight:700;color:var(--muted);margin-top:4px;">Fra matavfall til fremtiden 🌱</div>
+      </div>
+
+      <!-- About -->
+      <div class="card">
+        <div class="card-title">Om appen</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">
+          BioBin X kombinerer en smart bøtte med en app for å gjøre kildesortering morsomt og lærerikt for elever.
+        </div>
+      </div>
+
+      <!-- How it works steps -->
+      <div class="card">
+        <div class="card-title">Slik fungerer systemet</div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--green);">1</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:4px;"><strong style="color:var(--text);">Smart bøtte med sensor</strong> – BioBin X-bøtten har en vekt og Bluetooth-sensor innebygd. Hver gang noen kaster mat, registreres vekten automatisk.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--green);">2</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:4px;"><strong style="color:var(--text);">Live data til appen</strong> – Bøtten sender data til appen via WiFi eller Bluetooth. Elevene ser umiddelbart hvor mye som er kastet og hva det tilsvarer i energi.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--green);">3</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:4px;"><strong style="color:var(--text);">Biogassberegning</strong> – Appen regner ut hvor mye biogass (metan) matavfallet teoretisk kan produsere, basert på type og vekt.</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--green);">4</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:4px;"><strong style="color:var(--text);">Gamification</strong> – Elevene tjener miljøpoeng, låser opp prestasjoner og konkurrerer mot andre klasser – noe som motiverer til bedre sorteringsatferd.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ════════ BOTTOM NAV ════════ -->
     <nav class="bottom-nav">
       <div class="nav-item active" onclick="showScreen('home',this)">
@@ -1018,102 +1068,14 @@
         <div class="nav-icon">🏫</div>
         <div class="nav-label">KLASSE</div>
       </div>
+      <div class="nav-item" onclick="showScreen('info',this)">
+        <div class="nav-icon">ℹ️</div>
+        <div class="nav-label">INFO</div>
+      </div>
     </nav>
 
   </div><!-- /phone-inner -->
 </div><!-- /phone -->
-
-<!-- ═══════════════════ INFO SECTION ═══════════════════ -->
-<div class="info-section">
-  <div class="info-logo">BioBin X</div>
-  <div class="info-tagline">Fra matavfall til fremtiden 🌱</div>
-
-  <h2>Slik fungerer systemet</h2>
-  <p>BioBin X kombinerer en smart bøtte med en app for å gjøre kildesortering morsomt og lærerikt for elever.</p>
-
-  <div class="how-steps">
-    <div class="hw">
-      <div class="hw-num">1</div>
-      <div class="hw-text"><strong style="color:var(--text);">Smart bøtte med sensor</strong> – BioBin X-bøtten har en vekt og Bluetooth-sensor innebygd. Hver gang noen kaster mat, registreres vekten automatisk.</div>
-    </div>
-    <div class="hw">
-      <div class="hw-num">2</div>
-      <div class="hw-text"><strong style="color:var(--text);">Live data til appen</strong> – Bøtten sender data til appen via WiFi eller Bluetooth. Elevene ser umiddelbart hvor mye som er kastet og hva det tilsvarer i energi.</div>
-    </div>
-    <div class="hw">
-      <div class="hw-num">3</div>
-      <div class="hw-text"><strong style="color:var(--text);">Biogassberegning</strong> – Appen regner ut hvor mye biogass (metan) matavfallet teoretisk kan produsere, basert på type og vekt.</div>
-    </div>
-    <div class="hw">
-      <div class="hw-num">4</div>
-      <div class="hw-text"><strong style="color:var(--text);">Gamification</strong> – Elevene tjener miljøpoeng, låser opp prestasjoner og konkurrerer mot andre klasser – noe som motiverer til bedre sorteringsatferd.</div>
-    </div>
-  </div>
-
-  <h2>Gjør idéen virkelig 🚀</h2>
-  <p style="margin-bottom:14px;">Her er de beste plattformene og verktøyene for å bygge BioBin X fra idé til ekte produkt:</p>
-
-  <div class="partner-links">
-    <div style="font-size:13px;font-weight:800;color:var(--green);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;">📱 Bygg appen</div>
-
-    <a class="link-card" href="https://bubble.io" target="_blank">
-      <span class="lc-badge">Anbefalt</span>
-      <div class="lc-name">Bubble.io</div>
-      <div class="lc-desc">Bygg en ekte app uten koding. Dra-og-slipp med database, brukerinnlogging og dashboards. Perfekt for MVP av BioBin X.</div>
-    </a>
-
-    <a class="link-card" href="https://glideapps.com" target="_blank">
-      <span class="lc-badge">Enkel</span>
-      <div class="lc-name">Glide Apps</div>
-      <div class="lc-desc">Lag en mobilapp fra et Google Sheets-regneark på minutter. Superenkel å sette opp, bra for prototype med leaderboard og poeng.</div>
-    </a>
-
-    <a class="link-card" href="https://adalo.com" target="_blank">
-      <div class="lc-name">Adalo</div>
-      <div class="lc-desc">No-code appbuilder med innebygd database. Støtter poengsystemer og leaderboards – ideelt for skole-apper.</div>
-    </a>
-
-    <div style="font-size:13px;font-weight:800;color:var(--lime);letter-spacing:.5px;text-transform:uppercase;margin:16px 0 10px;">🔌 Koble til smart bøtte</div>
-
-    <a class="link-card" href="https://arduino.cc" target="_blank">
-      <span class="lc-badge">Hardware</span>
-      <div class="lc-name">Arduino + vektsensor</div>
-      <div class="lc-desc">Bygg en smart bøtte med Arduino, en lastcelle (vektsensor) og WiFi-modul. Sender data direkte til appen din. Koster fra ~400 kr.</div>
-    </a>
-
-    <a class="link-card" href="https://www.raspberrypi.org" target="_blank">
-      <div class="lc-name">Raspberry Pi</div>
-      <div class="lc-desc">Mer kraftig alternativ til Arduino. Perfekt hvis du vil ha kamera for å identifisere mattyper og mer avansert AI-analyse.</div>
-    </a>
-
-    <a class="link-card" href="https://thingspeak.com" target="_blank">
-      <div class="lc-name">ThingSpeak (IoT Cloud)</div>
-      <div class="lc-desc">Gratis IoT-plattform for å sende sensordata fra bøtten til internett, som appen kan hente og vise i sanntid.</div>
-    </a>
-
-    <div style="font-size:13px;font-weight:800;color:var(--yellow);letter-spacing:.5px;text-transform:uppercase;margin:16px 0 10px;">🏫 Finn støtte og partnere</div>
-
-    <a class="link-card" href="https://ungreentrepreneurs.com" target="_blank">
-      <div class="lc-name">UN Green Entrepreneurs</div>
-      <div class="lc-desc">FN-program for unge gründere med fokus på bærekraft. Støtte, mentorer og nettverk for prosjekter som BioBin X.</div>
-    </a>
-
-    <a class="link-card" href="https://www.forskningsradet.no" target="_blank">
-      <div class="lc-name">Innovasjon Norge / Forskningsrådet</div>
-      <div class="lc-desc">Søk om gründerstøtte til å utvikle BioBin X videre. Spesielt relevant under kategorien «grønn innovasjon».</div>
-    </a>
-
-    <a class="link-card" href="https://www.ungt.no" target="_blank">
-      <div class="lc-name">Ungt Entreprenørskap Norge</div>
-      <div class="lc-desc">Program for skoleelever som vil starte bedrift. Perfekt match for BioBin X – de hjelper med forretningsplan, presentasjon og investorer.</div>
-    </a>
-  </div>
-
-  <div style="margin-top:24px;padding:20px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.15);border-radius:16px;">
-    <div style="font-size:15px;font-weight:900;color:var(--text);margin-bottom:8px;">💡 Anbefalt første steg</div>
-    <p>Start med <strong style="color:var(--green);">Glide Apps</strong> (gratis) og koble til et Google Sheets-ark manuelt. Bygg deretter bøtte-prototypen med <strong style="color:var(--green);">Arduino + vektsensor</strong> og send data via ThingSpeak. Når konseptet er bevist, søk støtte hos Ungt Entreprenørskap!</p>
-  </div>
-</div>
 
 </div><!-- /outer -->
 
@@ -1121,7 +1083,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const screenMap = { home:'s-home', energy:'s-energy', env:'s-env', points:'s-points', class:'s-class' };
+  const screenMap = { home:'s-home', energy:'s-energy', env:'s-env', points:'s-points', class:'s-class', info:'s-info' };
 
   function showScreen(id, navEl) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1135,7 +1097,7 @@
 
   function showToast(msg) {
     const t = document.getElementById('toast');
-    const labels = {HJEM:'🏠 Hjem', ENERGI:'⚡ Energimåler', 'MILJØ':'🌍 Miljøeffekt', POENG:'⭐ Mine poeng', KLASSE:'🏫 Klassekonkurranse'};
+    const labels = {HJEM:'🏠 Hjem', ENERGI:'⚡ Energimåler', 'MILJØ':'🌍 Miljøeffekt', POENG:'⭐ Mine poeng', KLASSE:'🏫 Klassekonkurranse', INFO:'ℹ️ Info'};
     t.textContent = labels[msg] || msg;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 1800);
