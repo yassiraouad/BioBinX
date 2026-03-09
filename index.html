@@ -1,3 +1,13 @@
+Yes! Here is the **fully updated code** again.
+
+This version includes:
+1.  **📸 Real Camera Access:** It now asks for permission to use your device's camera when you click the "Skann" tab. (Note: Works best on HTTPS or localhost).
+2.  **🎲 Randomized Quiz:** I expanded the question bank to **20 questions**. Every time you start a quiz, it randomly picks 5 unique questions.
+3.  **All Previous Features:** Live data simulation, gamification, class competition, and the dark eco-theme.
+
+### 📱 Copy & Save this as `index.html`
+
+```html
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -6,1920 +16,1964 @@
 <title>BioBin X – App Konsept</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d1a10;
-    --surface: #142018;
-    --surface2: #1c2e20;
-    --green: #4ade80;
-    --green2: #22c55e;
-    --lime: #a3e635;
-    --yellow: #fde047;
-    --orange: #fb923c;
-    --text: #f0fdf4;
-    --muted: #86efac;
-    --card: #192c1e;
-    --border: #2d4a34;
-  }
+:root {
+--bg: #0d1a10;
+--surface: #142018;
+--surface2: #1c2e20;
+--green: #4ade80;
+--green2: #22c55e;
+--lime: #a3e635;
+--yellow: #fde047;
+--orange: #fb923c;
+--text: #f0fdf4;
+--muted: #86efac;
+--card: #192c1e;
+--border: #2d4a34;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body {
+font-family: 'Nunito', sans-serif;
+background: #0a0f0b;
+display: flex;
+justify-content: center;
+align-items: flex-start;
+min-height: 100vh;
+padding: 30px 16px 60px;
+}
+/* ── PHONE SHELL ── */
+.phone {
+width: 390px;
+background: #111;
+border-radius: 54px;
+padding: 14px;
+box-shadow:
+0 0 0 2px #2a2a2a,
+0 0 0 4px #1a1a1a,
+0 40px 80px rgba(0,0,0,.8),
+inset 0 1px 0 rgba(255,255,255,.08);
+position: relative;
+flex-shrink: 0;
+}
+.phone-inner {
+background: var(--bg);
+border-radius: 44px;
+overflow: hidden;
+height: 844px;
+position: relative;
+display: flex;
+flex-direction: column;
+}
+/* notch */
+.notch {
+position: absolute;
+top: 0; left: 50%; transform: translateX(-50%);
+width: 126px; height: 34px;
+background: #111;
+border-radius: 0 0 22px 22px;
+z-index: 400;
+}
+/* ── SCREEN SYSTEM ── */
+.screen {
+display: none;
+overflow-y: auto;
+overflow-x: hidden;
+flex: 1;
+scroll-behavior: smooth;
+padding-bottom: 20px;
+}
+.screen.active { display: block; }
+.screen::-webkit-scrollbar { display: none; }
+/* ── STATUS BAR ── */
+.status-bar {
+display: flex; justify-content: space-between; align-items: center;
+padding: 14px 28px 0;
+font-size: 12px; font-weight: 700; color: var(--muted);
+letter-spacing: .5px;
+}
+.status-icons { display: flex; gap: 6px; align-items: center; font-size: 11px; }
+/* ── TOP NAV ── */
+.bottom-nav {
+background: rgba(12,24,14,.97);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(--border);
+display: flex;
+flex-direction: row;
+overflow-x: auto;
+overflow-y: hidden;
+padding: 8px 8px 8px;
+gap: 4px;
+z-index: 200;
+scrollbar-width: none;
+flex-shrink: 0;
+}
+.bottom-nav::-webkit-scrollbar { display: none; }
+.nav-item {
+flex-shrink: 0;
+width: 44px;
+height: 44px;
+border-radius: 12px;
+display: flex; flex-direction: column; align-items: center;
+justify-content: center;
+gap: 4px; cursor: pointer; transition: all .2s;
+}
+.nav-item.active {
+background: rgba(74,222,128,.12);
+border: 1px solid rgba(74,222,128,.3);
+}
+.nav-icon { font-size: 20px; transition: transform .2s; }
+.nav-label { display: none; }
+.nav-item.active .nav-icon { transform: scale(1.1); }
+.nav-item:active .nav-icon { transform: scale(.85); }
+/* ── COMMON COMPONENTS ── */
+.page-header {
+padding: 20px 24px 16px;
+}
+.page-title {
+font-size: 28px; font-weight: 900; color: var(--text);
+line-height: 1.15;
+}
+.page-sub { font-size: 14px; color: var(--muted); margin-top: 4px; font-weight: 600; }
+.card {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 20px;
+padding: 20px;
+margin: 0 16px 14px;
+}
+.card-title {
+font-size: 12px; font-weight: 800; letter-spacing: 1px;
+text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+}
+/* ── PROGRESS BAR ── */
+.prog-track {
+background: rgba(255,255,255,.07);
+border-radius: 100px; height: 12px; overflow: hidden;
+}
+.prog-fill {
+height: 100%; border-radius: 100px;
+background: linear-gradient(90deg, var(--green2), var(--lime));
+transition: width 1.2s cubic-bezier(.2,.8,.2,1);
+box-shadow: 0 0 12px rgba(74,222,128,.4);
+}
+/* ── BIG NUMBER ── */
+.big-num {
+font-family: 'Space Mono', monospace;
+font-size: 54px; font-weight: 700;
+color: var(--green);
+line-height: 1;
+text-shadow: 0 0 30px rgba(74,222,128,.3);
+}
+.big-unit { font-size: 18px; font-weight: 700; color: var(--muted); margin-left: 4px; }
+/* ── BADGE ── */
+.badge {
+display: inline-block; padding: 4px 12px; border-radius: 100px;
+font-size: 12px; font-weight: 800; letter-spacing: .5px;
+}
+.badge-green { background: rgba(74,222,128,.15); color: var(--green); border: 1px solid rgba(74,222,128,.3); }
+.badge-yellow { background: rgba(253,224,71,.15); color: var(--yellow); border: 1px solid rgba(253,224,71,.3); }
+.badge-orange { background: rgba(251,146,60,.15); color: var(--orange); border: 1px solid rgba(251,146,60,.3); }
+/* ── PULSE DOT ── */
+.pulse {
+width: 10px; height: 10px; border-radius: 50%;
+background: var(--green);
+box-shadow: 0 0 0 0 rgba(74,222,128,.5);
+animation: pulseAnim 2s infinite;
+}
+@keyframes pulseAnim {
+0% { box-shadow: 0 0 0 0 rgba(74,222,128,.5); }
+70% { box-shadow: 0 0 0 10px rgba(74,222,128,0); }
+100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
+}
+/* ══════════════════════════════════
+SCREEN 1 – HJEM
+══════════════════════════════════ */
+#s-home .hero-banner {
+margin: 8px 16px 14px;
+background: linear-gradient(135deg, #1a3d22, #0f2615);
+border: 1px solid var(--border);
+border-radius: 24px;
+padding: 24px 20px;
+position: relative;
+overflow: hidden;
+}
+#s-home .hero-banner::before {
+content: '';
+position: absolute; inset: 0;
+background: radial-gradient(circle at 80% 50%, rgba(74,222,128,.12), transparent 60%);
+}
+#s-home .hero-emoji {
+font-size: 64px;
+position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+filter: drop-shadow(0 0 20px rgba(74,222,128,.4));
+animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+0%,100% { transform: translateY(-50%) translateY(0); }
+50% { transform: translateY(-50%) translateY(-8px); }
+}
+#s-home .hero-label { font-size: 12px; font-weight: 800; color: var(--green); letter-spacing: 1px; text-transform: uppercase; }
+#s-home .hero-value { font-family: 'Space Mono', monospace; font-size: 44px; font-weight: 700; color: var(--text); line-height: 1.1; margin: 4px 0; }
+#s-home .hero-sub { font-size: 13px; color: var(--muted); font-weight: 600; }
+.stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 16px 14px; }
+.stat-card {
+background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+padding: 16px; text-align: center;
+}
+.stat-card .s-icon { font-size: 28px; margin-bottom: 6px; }
+.stat-card .s-val { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; color: var(--green); }
+.stat-card .s-lbl { font-size: 11px; font-weight: 700; color: var(--muted); margin-top: 2px; }
+.activity-item {
+display: flex; align-items: center; gap: 12px;
+padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.activity-item:last-child { border-bottom: none; }
+.act-icon { width: 38px; height: 38px; border-radius: 12px; background: rgba(74,222,128,.1);
+display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.act-text { flex: 1; }
+.act-main { font-size: 13px; font-weight: 700; color: var(--text); }
+.act-time { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.act-pts { font-size: 13px; font-weight: 800; color: var(--green); }
+/* live connection status */
+.conn-bar {
+margin: 0 16px 14px;
+background: rgba(74,222,128,.08);
+border: 1px solid rgba(74,222,128,.2);
+border-radius: 14px;
+padding: 12px 16px;
+display: flex; align-items: center; gap: 10px;
+}
+.conn-bar span { font-size: 13px; font-weight: 700; color: var(--green); }
+/* ════════ SCREEN: ENERGI ════════ */
+#s-energy .gauge-wrap {
+margin: 8px auto 0;
+width: 220px; height: 120px;
+position: relative;
+display: flex; align-items: flex-end; justify-content: center;
+}
+#s-energy .gauge-svg { width: 220px; height: 130px; }
+.energy-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 0 16px 14px; }
+.e-tile {
+background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+padding: 14px 10px; text-align: center;
+}
+.e-tile .e-icon { font-size: 24px; margin-bottom: 6px; }
+.e-tile .e-val { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; color: var(--lime); }
+.e-tile .e-lbl { font-size: 10px; font-weight: 700; color: var(--muted); margin-top: 3px; line-height: 1.3; }
+.process-steps { margin: 0 16px 14px; }
+.step {
+display: flex; gap: 14px; align-items: flex-start;
+padding: 14px 0; border-bottom: 1px solid var(--border);
+position: relative;
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+width: 32px; height: 32px; border-radius: 50%;
+background: linear-gradient(135deg, var(--green2), var(--lime));
+display: flex; align-items: center; justify-content: center;
+font-size: 14px; font-weight: 900; color: #0a1a0c; flex-shrink: 0;
+}
+.step-body .step-title { font-size: 14px; font-weight: 800; color: var(--text); }
+.step-body .step-desc { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+/* ════════ SCREEN: MILJØ ════════ */
+#s-env .co2-hero {
+margin: 8px 16px 14px;
+background: linear-gradient(135deg, #102030, #0a1520);
+border: 1px solid #1a3050;
+border-radius: 24px; padding: 24px 20px;
+text-align: center; position: relative; overflow: hidden;
+}
+#s-env .co2-hero::before {
+content: '';
+position: absolute; inset: 0;
+background: radial-gradient(circle at 50% 0%, rgba(59,130,246,.15), transparent 70%);
+}
+#s-env .co2-num {
+font-family: 'Space Mono', monospace;
+font-size: 60px; font-weight: 700;
+color: #60a5fa; line-height: 1;
+text-shadow: 0 0 30px rgba(96,165,250,.4);
+}
+#s-env .co2-unit { font-size: 20px; color: #93c5fd; font-weight: 700; }
+#s-env .co2-lbl { font-size: 14px; color: #93c5fd; margin-top: 8px; font-weight: 600; }
+.env-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 16px 14px; }
+.env-card {
+background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+padding: 16px; text-align: center;
+}
+.env-card .ec-icon { font-size: 32px; margin-bottom: 8px; }
+.env-card .ec-val { font-size: 16px; font-weight: 900; color: var(--text); }
+.env-card .ec-lbl { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.4; font-weight: 600; }
+.week-chart { margin: 0 16px 14px; }
+.chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 80px; }
+.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.bar {
+width: 100%; border-radius: 6px 6px 0 0;
+background: linear-gradient(180deg, rgba(74,222,128,.8), rgba(74,222,128,.3));
+transition: height .8s cubic-bezier(.2,.8,.2,1);
+min-height: 4px;
+}
+.bar-day { font-size: 10px; font-weight: 700; color: var(--muted); }
+/* ════════ SCREEN: POENG ════════ */
+#s-points .xp-hero {
+margin: 8px 16px 14px;
+background: linear-gradient(135deg, #2a1a00, #1a1000);
+border: 1px solid #4a3000;
+border-radius: 24px; padding: 24px 20px;
+text-align: center; position: relative; overflow: hidden;
+}
+#s-points .xp-hero::before {
+content: '';
+position: absolute; inset: 0;
+background: radial-gradient(circle at 50% 0%, rgba(253,224,71,.12), transparent 70%);
+}
+#s-points .xp-num {
+font-family: 'Space Mono', monospace; font-size: 56px; font-weight: 700;
+color: var(--yellow); text-shadow: 0 0 30px rgba(253,224,71,.4); line-height: 1;
+}
+#s-points .xp-label { font-size: 14px; color: #fef08a; font-weight: 700; margin-top: 6px; }
+#s-points .level-badge {
+display: inline-block; margin-top: 10px;
+padding: 6px 16px; border-radius: 100px;
+background: rgba(253,224,71,.15); border: 1px solid rgba(253,224,71,.3);
+font-size: 13px; font-weight: 800; color: var(--yellow);
+}
+.xp-prog-wrap { margin: 4px 0 12px; }
+.xp-prog-track { background: rgba(255,255,255,.08); border-radius: 100px; height: 10px; overflow: hidden; }
+.xp-prog-fill {
+height: 100%; border-radius: 100px;
+background: linear-gradient(90deg, var(--yellow), var(--orange));
+box-shadow: 0 0 12px rgba(253,224,71,.4);
+transition: width 1s ease;
+}
+.xp-prog-label { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--muted); margin-top: 6px; }
+.achievement-list { margin: 0 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+.ach-item {
+background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+padding: 14px 16px; display: flex; align-items: center; gap: 14px;
+}
+.ach-item.locked { opacity: .45; }
+.ach-icon { font-size: 28px; flex-shrink: 0; }
+.ach-body { flex: 1; }
+.ach-title { font-size: 14px; font-weight: 800; color: var(--text); }
+.ach-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.ach-pts { font-size: 13px; font-weight: 800; color: var(--yellow); }
+/* ════════ SCREEN: KLASSE ════════ */
+#s-class .comp-header {
+margin: 8px 16px 14px;
+background: linear-gradient(135deg, #1a0f30, #100a20);
+border: 1px solid #2a1a50;
+border-radius: 24px; padding: 20px;
+text-align: center; position: relative; overflow: hidden;
+}
+#s-class .comp-header::before {
+content: '';
+position: absolute; inset: 0;
+background: radial-gradient(circle at 50% 0%, rgba(167,139,250,.15), transparent 70%);
+}
+#s-class .comp-title { font-size: 18px; font-weight: 900; color: #e9d5ff; margin-bottom: 4px; }
+#s-class .comp-sub { font-size: 13px; color: #c4b5fd; font-weight: 600; }
+#s-class .comp-timer {
+margin-top: 12px; font-family: 'Space Mono', monospace;
+font-size: 26px; font-weight: 700; color: #a78bfa;
+text-shadow: 0 0 20px rgba(167,139,250,.4);
+}
+.podium { display: flex; align-items: flex-end; gap: 8px; margin: 0 16px 14px; height: 140px; }
+.pod-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.pod-bar {
+width: 100%; border-radius: 12px 12px 0 0;
+display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+padding-top: 10px;
+}
+.pod-bar.p1 { background: linear-gradient(180deg, #fde047, #f59e0b); height: 120px; }
+.pod-bar.p2 { background: linear-gradient(180deg, #d1d5db, #9ca3af); height: 90px; }
+.pod-bar.p3 { background: linear-gradient(180deg, #fb923c, #c2410c); height: 70px; }
+.pod-rank { font-size: 18px; }
+.pod-kg { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; color: rgba(0,0,0,.7); }
+.pod-name { font-size: 11px; font-weight: 800; color: var(--muted); text-align: center; }
+.leaderboard { margin: 0 16px 14px; display: flex; flex-direction: column; gap: 8px; }
+.lb-item {
+background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+padding: 12px 16px; display: flex; align-items: center; gap: 12px;
+}
+.lb-item.my-class { border-color: rgba(167,139,250,.5); background: rgba(167,139,250,.08); }
+.lb-rank { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; color: var(--muted); width: 28px; text-align: center; }
+.lb-name { flex: 1; font-size: 14px; font-weight: 800; color: var(--text); }
+.lb-val { font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; }
+.lb-item.my-class .lb-name { color: #c4b5fd; }
+.lb-item.my-class .lb-val { color: #a78bfa; }
+/* ════════ SCREEN: INFO ════════ */
+#s-info .page-header { padding: 20px 24px 16px; }
+/* ════════ SCREEN: PROFIL ════════ */
+#s-profil .page-header { padding: 20px 24px 16px; }
+/* ════════ SCREEN: SKANN (UPDATED) ════════ */
+#s-skann .cam-container {
+margin: 0 16px 14px;
+position: relative;
+border-radius: 24px;
+overflow: hidden;
+background: #000;
+border: 1px solid var(--border);
+aspect-ratio: 1;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+#camera-feed {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: none; /* Hidden until activated */
+}
+.cam-overlay {
+position: absolute;
+inset: 0;
+pointer-events: none;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+gap: 12px;
+}
+.cam-corner {
+position: absolute;
+width: 32px;
+height: 32px;
+border: 3px solid var(--green);
+}
+.cam-tl { top: 16px; left: 16px; border-right: 0; border-bottom: 0; border-radius: 4px 0 0 0; }
+.cam-tr { top: 16px; right: 16px; border-left: 0; border-bottom: 0; border-radius: 0 4px 0 0; }
+.cam-bl { bottom: 16px; left: 16px; border-right: 0; border-top: 0; border-radius: 0 0 0 4px; }
+.cam-br { bottom: 16px; right: 16px; border-left: 0; border-top: 0; border-radius: 0 0 4px 0; }
+.scan-line {
+position: absolute;
+left: 16px;
+right: 16px;
+height: 2px;
+background: linear-gradient(90deg, transparent, var(--green), transparent);
+box-shadow: 0 0 8px var(--green);
+animation: scanLine 2s ease-in-out infinite;
+top: 50%;
+}
+.cam-placeholder {
+text-align: center;
+color: var(--muted);
+z-index: 10;
+}
+.cam-placeholder .icon { font-size: 48px; margin-bottom: 8px; display: block; }
+.cam-result-overlay {
+display: none;
+text-align: center;
+padding: 20px;
+background: rgba(0,0,0,0.7);
+backdrop-filter: blur(4px);
+border-radius: 16px;
+animation: popIn .4s ease;
+}
+@keyframes scanLine {
+0%   { top: 20%; opacity: 1; }
+50%  { top: 80%; opacity: 1; }
+100% { top: 20%; opacity: 1; }
+}
+@keyframes popIn {
+0%   { transform: scale(0.7); opacity: 0; }
+70%  { transform: scale(1.1); }
+100% { transform: scale(1);   opacity: 1; }
+}
+/* ════════ SCREEN: BØTTE ════════ */
+#s-botte .page-header { padding: 20px 24px 16px; }
+/* ════════ SCREEN: STATISTIKK ════════ */
+#s-stats .page-header { padding: 20px 24px 16px; }
+/* ════════ SCREEN: QUIZ ════════ */
+#s-quiz .page-header { padding: 20px 24px 16px; }
+.q-opt { cursor: pointer; transition: all .2s; }
+.q-opt:active { transform: scale(.98); }
+/* ════════ SCREEN: VARSLER ════════ */
+#s-varsler .page-header { padding: 20px 24px 16px; }
+/* ════════ SCREEN: BELØNNINGER ════════ */
+#s-rewards .page-header { padding: 20px 24px 16px; }
 
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: #0a0f0b;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    padding: 30px 16px 60px;
-  }
-
-  /* ── PHONE SHELL ── */
-  .phone {
-    width: 390px;
-    background: #111;
-    border-radius: 54px;
-    padding: 14px;
-    box-shadow:
-      0 0 0 2px #2a2a2a,
-      0 0 0 4px #1a1a1a,
-      0 40px 80px rgba(0,0,0,.8),
-      inset 0 1px 0 rgba(255,255,255,.08);
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  .phone-inner {
-    background: var(--bg);
-    border-radius: 44px;
-    overflow: hidden;
-    height: 844px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* notch */
-  .notch {
-    position: absolute;
-    top: 0; left: 50%; transform: translateX(-50%);
-    width: 126px; height: 34px;
-    background: #111;
-    border-radius: 0 0 22px 22px;
-    z-index: 400;
-  }
-
-  /* ── SCREEN SYSTEM ── */
-  .screen {
-    display: none;
-    overflow-y: auto;
-    overflow-x: hidden;
-    flex: 1;
-    scroll-behavior: smooth;
-    padding-bottom: 20px;
-  }
-  .screen.active { display: block; }
-  .screen::-webkit-scrollbar { display: none; }
-
-  /* ── STATUS BAR ── */
-  .status-bar {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 14px 28px 0;
-    font-size: 12px; font-weight: 700; color: var(--muted);
-    letter-spacing: .5px;
-  }
-  .status-icons { display: flex; gap: 6px; align-items: center; font-size: 11px; }
-
-  /* ── TOP NAV ── */
-  .bottom-nav {
-    background: rgba(12,24,14,.97);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 8px 8px 8px;
-    gap: 4px;
-    z-index: 200;
-    scrollbar-width: none;
-    flex-shrink: 0;
-  }
-  .bottom-nav::-webkit-scrollbar { display: none; }
-  .nav-item {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: center;
-    gap: 4px; cursor: pointer; transition: all .2s;
-  }
-  .nav-item.active {
-    background: rgba(74,222,128,.12);
-    border: 1px solid rgba(74,222,128,.3);
-  }
-  .nav-icon { font-size: 20px; transition: transform .2s; }
-  .nav-label { display: none; }
-  .nav-item.active .nav-icon { transform: scale(1.1); }
-  .nav-item:active .nav-icon { transform: scale(.85); }
-
-  /* ── COMMON COMPONENTS ── */
-  .page-header {
-    padding: 20px 24px 16px;
-  }
-  .page-title {
-    font-size: 28px; font-weight: 900; color: var(--text);
-    line-height: 1.15;
-  }
-  .page-sub { font-size: 14px; color: var(--muted); margin-top: 4px; font-weight: 600; }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 20px;
-    margin: 0 16px 14px;
-  }
-  .card-title {
-    font-size: 12px; font-weight: 800; letter-spacing: 1px;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
-  }
-
-  /* ── PROGRESS BAR ── */
-  .prog-track {
-    background: rgba(255,255,255,.07);
-    border-radius: 100px; height: 12px; overflow: hidden;
-  }
-  .prog-fill {
-    height: 100%; border-radius: 100px;
-    background: linear-gradient(90deg, var(--green2), var(--lime));
-    transition: width 1.2s cubic-bezier(.2,.8,.2,1);
-    box-shadow: 0 0 12px rgba(74,222,128,.4);
-  }
-
-  /* ── BIG NUMBER ── */
-  .big-num {
-    font-family: 'Space Mono', monospace;
-    font-size: 54px; font-weight: 700;
-    color: var(--green);
-    line-height: 1;
-    text-shadow: 0 0 30px rgba(74,222,128,.3);
-  }
-  .big-unit { font-size: 18px; font-weight: 700; color: var(--muted); margin-left: 4px; }
-
-  /* ── BADGE ── */
-  .badge {
-    display: inline-block; padding: 4px 12px; border-radius: 100px;
-    font-size: 12px; font-weight: 800; letter-spacing: .5px;
-  }
-  .badge-green { background: rgba(74,222,128,.15); color: var(--green); border: 1px solid rgba(74,222,128,.3); }
-  .badge-yellow { background: rgba(253,224,71,.15); color: var(--yellow); border: 1px solid rgba(253,224,71,.3); }
-  .badge-orange { background: rgba(251,146,60,.15); color: var(--orange); border: 1px solid rgba(251,146,60,.3); }
-
-  /* ── PULSE DOT ── */
-  .pulse {
-    width: 10px; height: 10px; border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 0 0 rgba(74,222,128,.5);
-    animation: pulseAnim 2s infinite;
-  }
-  @keyframes pulseAnim {
-    0% { box-shadow: 0 0 0 0 rgba(74,222,128,.5); }
-    70% { box-shadow: 0 0 0 10px rgba(74,222,128,0); }
-    100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
-  }
-
-  /* ══════════════════════════════════
-     SCREEN 1 – HJEM
-  ══════════════════════════════════ */
-  #s-home .hero-banner {
-    margin: 8px 16px 14px;
-    background: linear-gradient(135deg, #1a3d22, #0f2615);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 24px 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  #s-home .hero-banner::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(circle at 80% 50%, rgba(74,222,128,.12), transparent 60%);
-  }
-  #s-home .hero-emoji {
-    font-size: 64px;
-    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-    filter: drop-shadow(0 0 20px rgba(74,222,128,.4));
-    animation: float 3s ease-in-out infinite;
-  }
-  @keyframes float {
-    0%,100% { transform: translateY(-50%) translateY(0); }
-    50% { transform: translateY(-50%) translateY(-8px); }
-  }
-  #s-home .hero-label { font-size: 12px; font-weight: 800; color: var(--green); letter-spacing: 1px; text-transform: uppercase; }
-  #s-home .hero-value { font-family: 'Space Mono', monospace; font-size: 44px; font-weight: 700; color: var(--text); line-height: 1.1; margin: 4px 0; }
-  #s-home .hero-sub { font-size: 13px; color: var(--muted); font-weight: 600; }
-
-  .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 16px 14px; }
-  .stat-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 18px;
-    padding: 16px; text-align: center;
-  }
-  .stat-card .s-icon { font-size: 28px; margin-bottom: 6px; }
-  .stat-card .s-val { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; color: var(--green); }
-  .stat-card .s-lbl { font-size: 11px; font-weight: 700; color: var(--muted); margin-top: 2px; }
-
-  .activity-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.05);
-  }
-  .activity-item:last-child { border-bottom: none; }
-  .act-icon { width: 38px; height: 38px; border-radius: 12px; background: rgba(74,222,128,.1);
-    display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .act-text { flex: 1; }
-  .act-main { font-size: 13px; font-weight: 700; color: var(--text); }
-  .act-time { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .act-pts { font-size: 13px; font-weight: 800; color: var(--green); }
-
-  /* live connection status */
-  .conn-bar {
-    margin: 0 16px 14px;
-    background: rgba(74,222,128,.08);
-    border: 1px solid rgba(74,222,128,.2);
-    border-radius: 14px;
-    padding: 12px 16px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .conn-bar span { font-size: 13px; font-weight: 700; color: var(--green); }
-
-  /* ══════════════════════════════════
-     SCREEN 2 – ENERGI
-  ══════════════════════════════════ */
-  #s-energy .gauge-wrap {
-    margin: 8px auto 0;
-    width: 220px; height: 120px;
-    position: relative;
-    display: flex; align-items: flex-end; justify-content: center;
-  }
-  #s-energy .gauge-svg { width: 220px; height: 130px; }
-
-  .energy-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 0 16px 14px; }
-  .e-tile {
-    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-    padding: 14px 10px; text-align: center;
-  }
-  .e-tile .e-icon { font-size: 24px; margin-bottom: 6px; }
-  .e-tile .e-val { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; color: var(--lime); }
-  .e-tile .e-lbl { font-size: 10px; font-weight: 700; color: var(--muted); margin-top: 3px; line-height: 1.3; }
-
-  .process-steps { margin: 0 16px 14px; }
-  .step {
-    display: flex; gap: 14px; align-items: flex-start;
-    padding: 14px 0; border-bottom: 1px solid var(--border);
-    position: relative;
-  }
-  .step:last-child { border-bottom: none; }
-  .step-num {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--green2), var(--lime));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 900; color: #0a1a0c; flex-shrink: 0;
-  }
-  .step-body .step-title { font-size: 14px; font-weight: 800; color: var(--text); }
-  .step-body .step-desc { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
-
-  /* ══════════════════════════════════
-     SCREEN 3 – MILJØ
-  ══════════════════════════════════ */
-  #s-env .co2-hero {
-    margin: 8px 16px 14px;
-    background: linear-gradient(135deg, #102030, #0a1520);
-    border: 1px solid #1a3050;
-    border-radius: 24px; padding: 24px 20px;
-    text-align: center; position: relative; overflow: hidden;
-  }
-  #s-env .co2-hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(circle at 50% 0%, rgba(59,130,246,.15), transparent 70%);
-  }
-  #s-env .co2-num {
-    font-family: 'Space Mono', monospace;
-    font-size: 60px; font-weight: 700;
-    color: #60a5fa; line-height: 1;
-    text-shadow: 0 0 30px rgba(96,165,250,.4);
-  }
-  #s-env .co2-unit { font-size: 20px; color: #93c5fd; font-weight: 700; }
-  #s-env .co2-lbl { font-size: 14px; color: #93c5fd; margin-top: 8px; font-weight: 600; }
-
-  .env-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 16px 14px; }
-  .env-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 18px;
-    padding: 16px; text-align: center;
-  }
-  .env-card .ec-icon { font-size: 32px; margin-bottom: 8px; }
-  .env-card .ec-val { font-size: 16px; font-weight: 900; color: var(--text); }
-  .env-card .ec-lbl { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.4; font-weight: 600; }
-
-  .week-chart { margin: 0 16px 14px; }
-  .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 80px; }
-  .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-  .bar {
-    width: 100%; border-radius: 6px 6px 0 0;
-    background: linear-gradient(180deg, rgba(74,222,128,.8), rgba(74,222,128,.3));
-    transition: height .8s cubic-bezier(.2,.8,.2,1);
-    min-height: 4px;
-  }
-  .bar-day { font-size: 10px; font-weight: 700; color: var(--muted); }
-
-  /* ══════════════════════════════════
-     SCREEN 4 – POENG
-  ══════════════════════════════════ */
-  #s-points .xp-hero {
-    margin: 8px 16px 14px;
-    background: linear-gradient(135deg, #2a1a00, #1a1000);
-    border: 1px solid #4a3000;
-    border-radius: 24px; padding: 24px 20px;
-    text-align: center; position: relative; overflow: hidden;
-  }
-  #s-points .xp-hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(circle at 50% 0%, rgba(253,224,71,.12), transparent 70%);
-  }
-  #s-points .xp-num {
-    font-family: 'Space Mono', monospace; font-size: 56px; font-weight: 700;
-    color: var(--yellow); text-shadow: 0 0 30px rgba(253,224,71,.4); line-height: 1;
-  }
-  #s-points .xp-label { font-size: 14px; color: #fef08a; font-weight: 700; margin-top: 6px; }
-  #s-points .level-badge {
-    display: inline-block; margin-top: 10px;
-    padding: 6px 16px; border-radius: 100px;
-    background: rgba(253,224,71,.15); border: 1px solid rgba(253,224,71,.3);
-    font-size: 13px; font-weight: 800; color: var(--yellow);
-  }
-
-  .xp-prog-wrap { margin: 4px 0 12px; }
-  .xp-prog-track { background: rgba(255,255,255,.08); border-radius: 100px; height: 10px; overflow: hidden; }
-  .xp-prog-fill {
-    height: 100%; border-radius: 100px;
-    background: linear-gradient(90deg, var(--yellow), var(--orange));
-    box-shadow: 0 0 12px rgba(253,224,71,.4);
-    transition: width 1s ease;
-  }
-  .xp-prog-label { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--muted); margin-top: 6px; }
-
-  .achievement-list { margin: 0 16px 14px; display: flex; flex-direction: column; gap: 10px; }
-  .ach-item {
-    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-    padding: 14px 16px; display: flex; align-items: center; gap: 14px;
-  }
-  .ach-item.locked { opacity: .45; }
-  .ach-icon { font-size: 28px; flex-shrink: 0; }
-  .ach-body { flex: 1; }
-  .ach-title { font-size: 14px; font-weight: 800; color: var(--text); }
-  .ach-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .ach-pts { font-size: 13px; font-weight: 800; color: var(--yellow); }
-
-  /* ══════════════════════════════════
-     SCREEN 5 – KLASSE
-  ══════════════════════════════════ */
-  #s-class .comp-header {
-    margin: 8px 16px 14px;
-    background: linear-gradient(135deg, #1a0f30, #100a20);
-    border: 1px solid #2a1a50;
-    border-radius: 24px; padding: 20px;
-    text-align: center; position: relative; overflow: hidden;
-  }
-  #s-class .comp-header::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(circle at 50% 0%, rgba(167,139,250,.15), transparent 70%);
-  }
-  #s-class .comp-title { font-size: 18px; font-weight: 900; color: #e9d5ff; margin-bottom: 4px; }
-  #s-class .comp-sub { font-size: 13px; color: #c4b5fd; font-weight: 600; }
-  #s-class .comp-timer {
-    margin-top: 12px; font-family: 'Space Mono', monospace;
-    font-size: 26px; font-weight: 700; color: #a78bfa;
-    text-shadow: 0 0 20px rgba(167,139,250,.4);
-  }
-
-  .podium { display: flex; align-items: flex-end; gap: 8px; margin: 0 16px 14px; height: 140px; }
-  .pod-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-  .pod-bar {
-    width: 100%; border-radius: 12px 12px 0 0;
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    padding-top: 10px;
-  }
-  .pod-bar.p1 { background: linear-gradient(180deg, #fde047, #f59e0b); height: 120px; }
-  .pod-bar.p2 { background: linear-gradient(180deg, #d1d5db, #9ca3af); height: 90px; }
-  .pod-bar.p3 { background: linear-gradient(180deg, #fb923c, #c2410c); height: 70px; }
-  .pod-rank { font-size: 18px; }
-  .pod-kg { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; color: rgba(0,0,0,.7); }
-  .pod-name { font-size: 11px; font-weight: 800; color: var(--muted); text-align: center; }
-
-  .leaderboard { margin: 0 16px 14px; display: flex; flex-direction: column; gap: 8px; }
-  .lb-item {
-    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-    padding: 12px 16px; display: flex; align-items: center; gap: 12px;
-  }
-  .lb-item.my-class { border-color: rgba(167,139,250,.5); background: rgba(167,139,250,.08); }
-  .lb-rank { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; color: var(--muted); width: 28px; text-align: center; }
-  .lb-name { flex: 1; font-size: 14px; font-weight: 800; color: var(--text); }
-  .lb-val { font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; }
-  .lb-item.my-class .lb-name { color: #c4b5fd; }
-  .lb-item.my-class .lb-val { color: #a78bfa; }
-
-  /* ══════════════════════════════════
-     DECORATIVE BG GRID
-  ══════════════════════════════════ */
-  .bg-grid {
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background-image:
-      linear-gradient(rgba(74,222,128,.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(74,222,128,.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-
-  /* ── OUTER WRAPPER ── */
-  .outer {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 0; width: 100%; max-width: 420px;
-  }
-
-  /* ── INFO SECTION ── */
-  .info-section {
-    width: 390px; max-width: 100%;
-    background: #111;
-    border-radius: 32px;
-    padding: 32px 28px;
-    margin-top: 24px;
-    border: 1px solid #1e2e1e;
-  }
-  .info-logo {
-    font-family: 'Space Mono', monospace;
-    font-size: 28px; font-weight: 700; color: var(--green);
-    letter-spacing: -1px; margin-bottom: 4px;
-  }
-  .info-tagline { font-size: 15px; font-weight: 700; color: #4a7a54; margin-bottom: 24px; }
-  .info-section h2 { font-size: 18px; font-weight: 900; color: var(--text); margin: 20px 0 8px; }
-  .info-section p { font-size: 14px; color: #6b9e76; line-height: 1.7; }
-
-  .how-steps { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
-  .hw { display: flex; gap: 12px; align-items: flex-start; }
-  .hw-num {
-    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
-    background: rgba(74,222,128,.15); border: 1px solid rgba(74,222,128,.3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 900; color: var(--green);
-  }
-  .hw-text { font-size: 13px; color: #6b9e76; line-height: 1.6; padding-top: 4px; }
-
-  .partner-links { margin-top: 24px; }
-  .partner-links h2 { font-size: 16px; font-weight: 900; color: var(--text); margin-bottom: 12px; }
-  .link-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-    padding: 14px 16px; margin-bottom: 10px; cursor: pointer;
-    transition: all .2s; text-decoration: none; display: block;
-  }
-  .link-card:hover { border-color: var(--green); background: rgba(74,222,128,.05); }
-  .link-card .lc-name { font-size: 14px; font-weight: 800; color: var(--text); }
-  .link-card .lc-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
-  .link-card .lc-badge { float: right; font-size: 10px; font-weight: 800; padding: 3px 10px;
-    background: rgba(74,222,128,.1); border-radius: 100px; color: var(--green); }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
-    background: var(--green); color: #0a1a0c;
-    padding: 10px 20px; border-radius: 100px;
-    font-size: 13px; font-weight: 800; white-space: nowrap;
-    opacity: 0; transition: all .3s; z-index: 999; pointer-events: none;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  @media (max-width: 440px) {
-    .phone { width: 100%; border-radius: 0; padding: 0; }
-    .phone-inner { border-radius: 0; height: 100vh; }
-    .info-section { width: 100%; border-radius: 0; }
-    body { padding: 0; }
-    .outer { max-width: 100%; }
-  }
+/* ── OUTER WRAPPER ── */
+.outer {
+display: flex; flex-direction: column; align-items: center;
+gap: 0; width: 100%; max-width: 420px;
+}
+/* ── INFO SECTION ── */
+.info-section {
+width: 390px; max-width: 100%;
+background: #111;
+border-radius: 32px;
+padding: 32px 28px;
+margin-top: 24px;
+border: 1px solid #1e2e1e;
+}
+.info-logo {
+font-family: 'Space Mono', monospace;
+font-size: 28px; font-weight: 700; color: var(--green);
+letter-spacing: -1px; margin-bottom: 4px;
+}
+.info-tagline { font-size: 15px; font-weight: 700; color: #4a7a54; margin-bottom: 24px; }
+.info-section h2 { font-size: 18px; font-weight: 900; color: var(--text); margin: 20px 0 8px; }
+.info-section p { font-size: 14px; color: #6b9e76; line-height: 1.7; }
+.how-steps { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+.hw { display: flex; gap: 12px; align-items: flex-start; }
+.hw-num {
+width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+background: rgba(74,222,128,.15); border: 1px solid rgba(74,222,128,.3);
+display: flex; align-items: center; justify-content: center;
+font-size: 12px; font-weight: 900; color: var(--green);
+}
+.hw-text { font-size: 13px; color: #6b9e76; line-height: 1.6; padding-top: 4px; }
+.partner-links { margin-top: 24px; }
+.partner-links h2 { font-size: 16px; font-weight: 900; color: var(--text); margin-bottom: 12px; }
+.link-card {
+background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+padding: 14px 16px; margin-bottom: 10px; cursor: pointer;
+transition: all .2s; text-decoration: none; display: block;
+}
+.link-card:hover { border-color: var(--green); background: rgba(74,222,128,.05); }
+.link-card .lc-name { font-size: 14px; font-weight: 800; color: var(--text); }
+.link-card .lc-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.link-card .lc-badge { float: right; font-size: 10px; font-weight: 800; padding: 3px 10px;
+background: rgba(74,222,128,.1); border-radius: 100px; color: var(--green); }
+/* ── TOAST ── */
+.toast {
+position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
+background: var(--green); color: #0a1a0c;
+padding: 10px 20px; border-radius: 100px;
+font-size: 13px; font-weight: 800; white-space: nowrap;
+opacity: 0; transition: all .3s; z-index: 999; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+@media (max-width: 440px) {
+.phone { width: 100%; border-radius: 0; padding: 0; }
+.phone-inner { border-radius: 0; height: 100vh; }
+.info-section { width: 100%; border-radius: 0; }
+body { padding: 0; }
+.outer { max-width: 100%; }
+}
 </style>
 </head>
 <body>
 <div class="bg-grid"></div>
 <div class="outer">
-
 <!-- ═══════════════════ PHONE ═══════════════════ -->
 <div class="phone">
-  <div class="phone-inner">
-    <div class="notch"></div>
-
-    <!-- ════════ SHARED TOP BAR ════════ -->
-    <div style="position:sticky;top:0;z-index:300;background:rgba(13,26,16,.98);backdrop-filter:blur(20px);">
-      <!-- Status bar -->
-      <div class="status-bar">
-        <span>09:41</span>
-        <div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--green);font-weight:700;">BioBin X</div>
-        <div class="status-icons">📶 🔋</div>
-      </div>
-      <!-- Nav -->
-      <nav class="bottom-nav">
-        <div class="nav-item active" onclick="showScreen('home',this)">
-          <div class="nav-icon">🏠</div><div class="nav-label">HJEM</div>
-        </div>
-        <div class="nav-item" onclick="showScreen('energy',this)">
-          <div class="nav-icon">⚡</div><div class="nav-label">ENERGI</div>
-        </div>
-        <div class="nav-item" onclick="showScreen('skann',this)">
-          <div class="nav-icon">📸</div><div class="nav-label">SKANN</div>
-        </div>
-        <div class="nav-item" onclick="showScreen('env',this)">
-          <div class="nav-icon">🌍</div><div class="nav-label">MILJØ</div>
-        </div>
-        <div class="nav-item" onclick="showScreen('points',this)">
-          <div class="nav-icon">⭐</div><div class="nav-label">POENG</div>
-        </div>
-        <div class="nav-item" onclick="showScreen('class',this)">
-          <div class="nav-icon">🏫</div><div class="nav-label">KLASSE</div>
-        </div>
-        <div class="nav-item" onclick="showScreen('stats',this)">
-          <div class="nav-icon">📊</div><div class="nav-label">STATISTIKK</div>
-        </div>
-        <div class="nav-item" onclick="showScreen('quiz',this)">
-          <div class="nav-icon">🧪</div><div class="nav-label">QUIZ</div>
-        </div>
-        <div class="nav-item" onclick="showScreen('varsler',this)">
-          <div class="nav-icon">🔔</div><div class="nav-label">VARSLER</div>
-        </div>
-        <div class="nav-item" onclick="showScreen('rewards',this)">
-          <div class="nav-icon">🎁</div><div class="nav-label">PREMIER</div>
-        </div>
-        <div class="nav-item" onclick="showScreen('botte',this)">
-          <div class="nav-icon">➕</div><div class="nav-label">BØTTE</div>
-        </div>
-        <div class="nav-item" onclick="showScreen('info',this)">
-          <div class="nav-icon">ℹ️</div><div class="nav-label">INFO</div>
-        </div>
-        <div class="nav-item" onclick="showScreen('profil',this)">
-          <div class="nav-icon">👤</div><div class="nav-label">PROFIL</div>
-        </div>
-      </nav>
-    </div>
-    <div class="screen active" id="s-home">
-      <div class="page-header">
-        <div class="page-title">God morgen,<br>Klasse 7B! 👋</div>
-        <div class="page-sub">Mandag 8. mars</div>
-      </div>
-
-      <!-- Live connection -->
-      <div class="conn-bar">
-        <div class="pulse"></div>
-        <span>BioBin X-bøtten er koblet til 🟢 Live</span>
-      </div>
-
-      <!-- Hero card -->
-      <div id="s-home" style="position:relative;">
-        <div class="hero-banner">
-          <div class="hero-label">Kastet i dag</div>
-          <div class="hero-value" id="waste-num">2.4<span style="font-size:22px"> kg</span></div>
-          <div class="hero-sub">av 5 kg dagsmål</div>
-          <div style="margin-top:14px;">
-            <div class="prog-track">
-              <div class="prog-fill" id="waste-bar" style="width:48%"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;margin-top:6px;">
-              <span style="font-size:11px;font-weight:700;color:var(--muted);">0 kg</span>
-              <span style="font-size:11px;font-weight:700;color:var(--green);">48%</span>
-              <span style="font-size:11px;font-weight:700;color:var(--muted);">5 kg</span>
-            </div>
-          </div>
-          <div class="hero-emoji">🗑️</div>
-        </div>
-      </div>
-
-      <!-- Stats -->
-      <div class="stat-row">
-        <div class="stat-card">
-          <div class="s-icon">⚡</div>
-          <div class="s-val">120</div>
-          <div class="s-lbl">Wh energi i dag</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-icon">🌿</div>
-          <div class="s-val">0.8</div>
-          <div class="s-lbl">kg CO₂ spart</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-icon">🏆</div>
-          <div class="s-val">+35</div>
-          <div class="s-lbl">poeng i dag</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-icon">🔥</div>
-          <div class="s-val">12</div>
-          <div class="s-lbl">dager på rad!</div>
-        </div>
-      </div>
-
-      <!-- Activity feed -->
-      <div class="card">
-        <div class="card-title">Siste aktivitet</div>
-        <div class="activity-item">
-          <div class="act-icon">🍌</div>
-          <div class="act-text">
-            <div class="act-main">Bananskall kastet</div>
-            <div class="act-time">For 12 min siden · 0.15 kg</div>
-          </div>
-          <div class="act-pts">+5 ⭐</div>
-        </div>
-        <div class="activity-item">
-          <div class="act-icon">🥦</div>
-          <div class="act-text">
-            <div class="act-main">Grønnsaksskrell</div>
-            <div class="act-time">For 1 time siden · 0.3 kg</div>
-          </div>
-          <div class="act-pts">+10 ⭐</div>
-        </div>
-        <div class="activity-item">
-          <div class="act-icon">🍞</div>
-          <div class="act-text">
-            <div class="act-main">Gammelt brød</div>
-            <div class="act-time">For 2 timer siden · 0.5 kg</div>
-          </div>
-          <div class="act-pts">+15 ⭐</div>
-        </div>
-      </div>
-
-      <!-- Tip card -->
-      <div class="card" style="background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(163,230,53,.05));border-color:rgba(74,222,128,.2);">
-        <div style="display:flex;gap:12px;align-items:flex-start;">
-          <div style="font-size:28px;">💡</div>
-          <div>
-            <div style="font-size:13px;font-weight:800;color:var(--green);">Visste du?</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6;">
-              1 kg matavfall kan lage nok biogass til å lade en mobiltelefon <strong style="color:var(--text);">over 50 ganger!</strong> 📱
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════════ SCREEN: ENERGI ════════ -->
-    <div class="screen" id="s-energy">
-      <div class="page-header">
-        <div class="page-title">⚡ Energimåler</div>
-        <div class="page-sub">Se hva matavfallet ditt kan bli til</div>
-      </div>
-
-      <!-- Gauge -->
-      <div class="card" style="text-align:center;">
-        <div class="card-title">Biogass produsert denne uken</div>
-        <div class="gauge-wrap">
-          <svg class="gauge-svg" viewBox="0 0 220 130">
-            <defs>
-              <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#22c55e"/>
-                <stop offset="100%" stop-color="#a3e635"/>
-              </linearGradient>
-            </defs>
-            <!-- background arc -->
-            <path d="M 20 120 A 90 90 0 0 1 200 120" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="16" stroke-linecap="round"/>
-            <!-- value arc -->
-            <path d="M 20 120 A 90 90 0 0 1 200 120" fill="none" stroke="url(#gaugeGrad)" stroke-width="16" stroke-linecap="round"
-              stroke-dasharray="283" stroke-dashoffset="85" style="filter:drop-shadow(0 0 8px rgba(74,222,128,.6));"/>
-            <!-- center text -->
-            <text x="110" y="105" text-anchor="middle" font-family="Space Mono" font-size="26" font-weight="700" fill="#4ade80">1.68</text>
-            <text x="110" y="122" text-anchor="middle" font-family="Nunito" font-size="11" font-weight="700" fill="#86efac">liter biogass</text>
-          </svg>
-        </div>
-        <div style="display:flex;justify-content:space-around;margin-top:8px;">
-          <div><div style="font-size:11px;font-weight:700;color:var(--muted);">Denne uka</div><div style="font-family:'Space Mono',monospace;font-size:18px;color:var(--lime);">8.4 L</div></div>
-          <div style="width:1px;background:var(--border);"></div>
-          <div><div style="font-size:11px;font-weight:700;color:var(--muted);">Denne måneden</div><div style="font-family:'Space Mono',monospace;font-size:18px;color:var(--lime);">34 L</div></div>
-          <div style="width:1px;background:var(--border);"></div>
-          <div><div style="font-size:11px;font-weight:700;color:var(--muted);">Totalt</div><div style="font-family:'Space Mono',monospace;font-size:18px;color:var(--lime);">142 L</div></div>
-        </div>
-      </div>
-
-      <!-- Energy equivalents -->
-      <div class="card">
-        <div class="card-title">Dette tilsvarer...</div>
-      </div>
-      <div class="energy-grid">
-        <div class="e-tile">
-          <div class="e-icon">📱</div>
-          <div class="e-val">710</div>
-          <div class="e-lbl">mobillading</div>
-        </div>
-        <div class="e-tile">
-          <div class="e-icon">💡</div>
-          <div class="e-val">17</div>
-          <div class="e-lbl">timer med lys</div>
-        </div>
-        <div class="e-tile">
-          <div class="e-icon">🎮</div>
-          <div class="e-val">48</div>
-          <div class="e-lbl">t gaming</div>
-        </div>
-        <div class="e-tile">
-          <div class="e-icon">🚿</div>
-          <div class="e-val">3</div>
-          <div class="e-lbl">varme dusjer</div>
-        </div>
-        <div class="e-tile">
-          <div class="e-icon">🍕</div>
-          <div class="e-val">8</div>
-          <div class="e-lbl">pizzaer bakt</div>
-        </div>
-        <div class="e-tile">
-          <div class="e-icon">🚲</div>
-          <div class="e-val">62</div>
-          <div class="e-lbl">km el-sykkel</div>
-        </div>
-      </div>
-
-      <!-- How it works -->
-      <div class="card">
-        <div class="card-title">Slik lager vi energi</div>
-      </div>
-      <div class="process-steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-body">
-            <div class="step-title">Du kaster mat i BioBin X 🗑️</div>
-            <div class="step-desc">Bøtten veier maten og sender data til appen med en gang!</div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-body">
-            <div class="step-title">Bakterier spiser maten 🦠</div>
-            <div class="step-desc">Inne i reaktoren bryter mikroorganismer ned matavfallet uten oksygen.</div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-body">
-            <div class="step-title">Biogass dannes ⚗️</div>
-            <div class="step-desc">Når bakterier spiser mat, lager de metan-gass – det er biogass!</div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">4</div>
-          <div class="step-body">
-            <div class="step-title">Energi til strøm og varme ⚡</div>
-            <div class="step-desc">Biogassen brennes for å lage elektrisk strøm og varme til hus og skoler.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════════ SCREEN: MILJØ ════════ -->
-    <div class="screen" id="s-env">
-      <div class="page-header">
-        <div class="page-title">🌍 Miljøeffekt</div>
-        <div class="page-sub">Klassen din gjør en forskjell!</div>
-      </div>
-
-      <!-- CO2 hero -->
-      <div class="co2-hero">
-        <div style="font-size:12px;font-weight:800;color:#60a5fa;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">CO₂ spart totalt</div>
-        <div class="co2-num">47.3</div>
-        <div class="co2-unit">kg CO₂</div>
-        <div class="co2-lbl">Dette er klassen din sin innsats! 🎉</div>
-      </div>
-
-      <!-- Comparisons -->
-      <div class="env-compare">
-        <div class="env-card">
-          <div class="ec-icon">🌳</div>
-          <div class="ec-val">2.4 trær</div>
-          <div class="ec-lbl">Som å plante to nye trær</div>
-        </div>
-        <div class="env-card">
-          <div class="ec-icon">🚗</div>
-          <div class="ec-val">188 km</div>
-          <div class="ec-lbl">Bilkjøring som ble unngått</div>
-        </div>
-        <div class="env-card">
-          <div class="ec-icon">✈️</div>
-          <div class="ec-val">7%</div>
-          <div class="ec-lbl">Av en flygning Oslo–London</div>
-        </div>
-        <div class="env-card">
-          <div class="ec-icon">🍔</div>
-          <div class="ec-val">24 stk</div>
-          <div class="ec-lbl">Hamburgere unngått</div>
-        </div>
-      </div>
-
-      <!-- Weekly chart -->
-      <div class="card">
-        <div class="card-title">CO₂ spart denne uken (kg)</div>
-        <div class="chart-bars">
-          <div class="bar-wrap"><div class="bar" style="height:40px;"></div><div class="bar-day">Man</div></div>
-          <div class="bar-wrap"><div class="bar" style="height:65px;"></div><div class="bar-day">Tir</div></div>
-          <div class="bar-wrap"><div class="bar" style="height:50px;"></div><div class="bar-day">Ons</div></div>
-          <div class="bar-wrap"><div class="bar" style="height:75px;"></div><div class="bar-day">Tor</div></div>
-          <div class="bar-wrap"><div class="bar" style="height:55px;opacity:.5;"></div><div class="bar-day">Fre</div></div>
-          <div class="bar-wrap"><div class="bar" style="height:20px;opacity:.3;"></div><div class="bar-day">Lør</div></div>
-          <div class="bar-wrap"><div class="bar" style="height:10px;opacity:.2;"></div><div class="bar-day">Søn</div></div>
-        </div>
-      </div>
-
-      <!-- Fun fact -->
-      <div class="card" style="background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.2);">
-        <div style="display:flex;gap:12px;align-items:flex-start;">
-          <div style="font-size:28px;">🌡️</div>
-          <div>
-            <div style="font-size:13px;font-weight:800;color:#60a5fa;">Klimafakta</div>
-            <div style="font-size:12px;color:#93c5fd;margin-top:4px;line-height:1.6;">
-              Matavfall på søppelfyllinger lager metan – en klimagass som er <strong style="color:var(--text);">25 ganger sterkere</strong> enn CO₂. Biogass stopper dette!
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" style="text-align:center;padding:20px;">
-        <div style="font-size:32px;margin-bottom:8px;">🌱</div>
-        <div style="font-size:15px;font-weight:800;color:var(--text);">Dere er klima-helter!</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6;">Fortsett å kaste matavfall riktig, og dere kan spare <span style="color:var(--green);font-weight:800;">over 200 kg CO₂</span> dette skoleåret.</div>
-      </div>
-    </div>
-
-    <!-- ════════ SCREEN: POENG ════════ -->
-    <div class="screen" id="s-points">
-      <div class="page-header">
-        <div class="page-title">⭐ Mine poeng</div>
-        <div class="page-sub">Du er på god vei – fortsett!</div>
-      </div>
-
-      <!-- XP hero -->
-      <div class="xp-hero">
-        <div class="xp-num">1 240</div>
-        <div class="xp-label">Miljøpoeng</div>
-        <div class="level-badge">🌿 Nivå 4 – Miljøvokter</div>
-      </div>
-
-      <!-- XP progress -->
-      <div class="card">
-        <div class="card-title">Neste nivå: Klimaforkjemper</div>
-        <div class="xp-prog-wrap">
-          <div class="xp-prog-track">
-            <div class="xp-prog-fill" style="width:62%"></div>
-          </div>
-          <div class="xp-prog-label">
-            <span>1 240 poeng</span>
-            <span>500 poeng igjen</span>
-            <span>1 750 poeng</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Achievements -->
-      <div class="card" style="margin-bottom:10px;">
-        <div class="card-title">Prestasjoner</div>
-      </div>
-      <div class="achievement-list">
-        <div class="ach-item">
-          <div class="ach-icon">🌱</div>
-          <div class="ach-body">
-            <div class="ach-title">Første kast!</div>
-            <div class="ach-desc">Du kastet matavfall for første gang</div>
-          </div>
-          <div class="ach-pts">+50 ⭐</div>
-        </div>
-        <div class="ach-item">
-          <div class="ach-icon">🔥</div>
-          <div class="ach-body">
-            <div class="ach-title">12 dager på rad!</div>
-            <div class="ach-desc">Du har kastet riktig 12 dager i strekk</div>
-          </div>
-          <div class="ach-pts">+200 ⭐</div>
-        </div>
-        <div class="ach-item">
-          <div class="ach-icon">🏆</div>
-          <div class="ach-body">
-            <div class="ach-title">10 kg kastet</div>
-            <div class="ach-desc">Totalt 10 kg matavfall kildesortert</div>
-          </div>
-          <div class="ach-pts">+150 ⭐</div>
-        </div>
-        <div class="ach-item">
-          <div class="ach-icon">🌍</div>
-          <div class="ach-body">
-            <div class="ach-title">Klimaekspert</div>
-            <div class="ach-desc">Fullfør klimakvizen</div>
-          </div>
-          <div class="ach-pts">+100 ⭐</div>
-        </div>
-        <div class="ach-item locked">
-          <div class="ach-icon">🚀</div>
-          <div class="ach-body">
-            <div class="ach-title">Supersorter 🔒</div>
-            <div class="ach-desc">Kast riktig 30 dager på rad</div>
-          </div>
-          <div class="ach-pts">+500 ⭐</div>
-        </div>
-        <div class="ach-item locked">
-          <div class="ach-icon">💎</div>
-          <div class="ach-body">
-            <div class="ach-title">Biogass-mester 🔒</div>
-            <div class="ach-desc">Bidra til 100 liter biogass</div>
-          </div>
-          <div class="ach-pts">+1000 ⭐</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════════ SCREEN: KLASSE ════════ -->
-    <div class="screen" id="s-class">
-      <div class="page-header">
-        <div class="page-title">🏫 Klassekonkurranse</div>
-        <div class="page-sub">Hvem samler mest matavfall?</div>
-      </div>
-
-      <!-- Competition header -->
-      <div class="comp-header">
-        <div class="comp-title">🏆 Vårkonkurransen 2025</div>
-        <div class="comp-sub">Uke 10–16 · 14 skoler deltar</div>
-        <div class="comp-timer">⏱ 18 dager igjen</div>
-      </div>
-
-      <!-- Podium -->
-      <div class="card">
-        <div class="card-title">Topp 3 denne uken</div>
-        <div class="podium">
-          <div class="pod-item">
-            <div class="pod-bar p2">
-              <div class="pod-rank">🥈</div>
-              <div class="pod-kg">41.2 kg</div>
-            </div>
-            <div class="pod-name">Smestad<br>7A</div>
-          </div>
-          <div class="pod-item">
-            <div class="pod-bar p1">
-              <div class="pod-rank">🥇</div>
-              <div class="pod-kg">58.7 kg</div>
-            </div>
-            <div class="pod-name">Majorstua<br>7C</div>
-          </div>
-          <div class="pod-item">
-            <div class="pod-bar p3">
-              <div class="pod-rank">🥉</div>
-              <div class="pod-kg">37.4 kg</div>
-            </div>
-            <div class="pod-name">Vinderen<br>6B</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Leaderboard -->
-      <div class="card" style="margin-bottom:10px;">
-        <div class="card-title">Alle klasser</div>
-      </div>
-      <div class="leaderboard">
-        <div class="lb-item">
-          <div class="lb-rank">#1</div>
-          <div>
-            <div class="lb-name">Majorstua 7C</div>
-            <div style="font-size:11px;color:var(--muted);">Oslo</div>
-          </div>
-          <div class="lb-val" style="color:var(--yellow);">58.7 kg</div>
-        </div>
-        <div class="lb-item">
-          <div class="lb-rank">#2</div>
-          <div>
-            <div class="lb-name">Smestad 7A</div>
-            <div style="font-size:11px;color:var(--muted);">Oslo</div>
-          </div>
-          <div class="lb-val" style="color:#d1d5db;">41.2 kg</div>
-        </div>
-        <div class="lb-item">
-          <div class="lb-rank">#3</div>
-          <div>
-            <div class="lb-name">Vinderen 6B</div>
-            <div style="font-size:11px;color:var(--muted);">Oslo</div>
-          </div>
-          <div class="lb-val" style="color:#fb923c;">37.4 kg</div>
-        </div>
-        <div class="lb-item my-class">
-          <div class="lb-rank">#4</div>
-          <div>
-            <div class="lb-name">Vår klasse 7B ⬅️</div>
-            <div style="font-size:11px;color:#a78bfa;">Bekkelaget</div>
-          </div>
-          <div class="lb-val">34.1 kg</div>
-        </div>
-        <div class="lb-item">
-          <div class="lb-rank">#5</div>
-          <div>
-            <div class="lb-name">Grefsen 6A</div>
-            <div style="font-size:11px;color:var(--muted);">Oslo</div>
-          </div>
-          <div class="lb-val" style="color:var(--muted);">29.8 kg</div>
-        </div>
-      </div>
-
-      <!-- Motivational card -->
-      <div class="card" style="background:rgba(167,139,250,.08);border-color:rgba(167,139,250,.2);">
-        <div style="text-align:center;">
-          <div style="font-size:28px;margin-bottom:8px;">💪</div>
-          <div style="font-size:14px;font-weight:800;color:#e9d5ff;">Dere er bare 3.3 kg unna 3. plass!</div>
-          <div style="font-size:12px;color:#c4b5fd;margin-top:6px;line-height:1.6;">Sørg for å kaste alt matavfall i BioBin X de neste dagene. Dere kan gjøre det!</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════════ SCREEN: INFO ════════ -->
-    <div class="screen" id="s-info">
-      <div class="page-header">
-        <div class="page-title">ℹ️ Info</div>
-        <div class="page-sub">Om BioBin X-systemet</div>
-      </div>
-
-      <!-- Logo card -->
-      <div class="card" style="text-align:center;background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(163,230,53,.04));border-color:rgba(74,222,128,.2);">
-        <div style="font-family:'Space Mono',monospace;font-size:26px;font-weight:700;color:var(--green);letter-spacing:-1px;">BioBin X</div>
-        <div style="font-size:13px;font-weight:700;color:var(--muted);margin-top:4px;">Fra matavfall til fremtiden 🌱</div>
-      </div>
-
-      <!-- About -->
-      <div class="card">
-        <div class="card-title">Om appen</div>
-        <div style="font-size:13px;color:var(--muted);line-height:1.7;">
-          BioBin X kombinerer en smart bøtte med en app for å gjøre kildesortering morsomt og lærerikt for elever.
-        </div>
-      </div>
-
-      <!-- How it works steps -->
-      <div class="card">
-        <div class="card-title">Slik fungerer systemet</div>
-        <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px;">
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--green);">1</div>
-            <div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:4px;"><strong style="color:var(--text);">Smart bøtte med sensor</strong> – BioBin X-bøtten har en vekt og Bluetooth-sensor innebygd. Hver gang noen kaster mat, registreres vekten automatisk.</div>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--green);">2</div>
-            <div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:4px;"><strong style="color:var(--text);">Live data til appen</strong> – Bøtten sender data til appen via WiFi eller Bluetooth. Elevene ser umiddelbart hvor mye som er kastet og hva det tilsvarer i energi.</div>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--green);">3</div>
-            <div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:4px;"><strong style="color:var(--text);">Biogassberegning</strong> – Appen regner ut hvor mye biogass (metan) matavfallet teoretisk kan produsere, basert på type og vekt.</div>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--green);">4</div>
-            <div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:4px;"><strong style="color:var(--text);">Gamification</strong> – Elevene tjener miljøpoeng, låser opp prestasjoner og konkurrerer mot andre klasser – noe som motiverer til bedre sorteringsatferd.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════════ SCREEN: PROFIL ════════ -->
-    <div class="screen" id="s-profil">
-      <div class="page-header">
-        <div class="page-title">👤 Min profil</div>
-        <div class="page-sub">Klasse 7B · Bekkelaget skole</div>
-      </div>
-
-      <!-- Avatar card -->
-      <div class="card" style="text-align:center;background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(163,230,53,.04));border-color:rgba(74,222,128,.2);">
-        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--green2),var(--lime));display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 12px;">🧑‍🎓</div>
-        <div style="font-size:20px;font-weight:900;color:var(--text);">Elev 7B</div>
-        <div style="font-size:13px;color:var(--muted);margin-top:4px;">Bekkelaget skole · Oslo</div>
-        <div style="margin-top:12px;">
-          <span style="display:inline-block;padding:6px 16px;border-radius:100px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);font-size:13px;font-weight:800;color:var(--green);">🌿 Nivå 4 – Miljøvokter</span>
-        </div>
-      </div>
-
-      <!-- Stats -->
-      <div class="stat-row">
-        <div class="stat-card">
-          <div class="s-icon">⭐</div>
-          <div class="s-val">1 240</div>
-          <div class="s-lbl">Totale poeng</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-icon">🗑️</div>
-          <div class="s-val">24.6</div>
-          <div class="s-lbl">kg kastet totalt</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-icon">🔥</div>
-          <div class="s-val">12</div>
-          <div class="s-lbl">Dager på rad</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-icon">🏆</div>
-          <div class="s-val">4</div>
-          <div class="s-lbl">Prestasjoner</div>
-        </div>
-      </div>
-
-      <!-- Settings -->
-      <div class="card">
-        <div class="card-title">Innstillinger</div>
-        <div class="activity-item">
-          <div class="act-icon">🔔</div>
-          <div class="act-text">
-            <div class="act-main">Varsler</div>
-            <div class="act-time">Daglige påminnelser om kildesortering</div>
-          </div>
-          <div style="width:42px;height:24px;background:var(--green2);border-radius:100px;position:relative;cursor:pointer;">
-            <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;right:2px;top:2px;"></div>
-          </div>
-        </div>
-        <div class="activity-item">
-          <div class="act-icon">🏫</div>
-          <div class="act-text">
-            <div class="act-main">Klasse</div>
-            <div class="act-time">7B · Bekkelaget skole</div>
-          </div>
-          <div style="font-size:12px;color:var(--muted);font-weight:700;">Endre ›</div>
-        </div>
-        <div class="activity-item">
-          <div class="act-icon">🌍</div>
-          <div class="act-text">
-            <div class="act-main">Språk</div>
-            <div class="act-time">Norsk</div>
-          </div>
-          <div style="font-size:12px;color:var(--muted);font-weight:700;">Endre ›</div>
-        </div>
-      </div>
-
-      <!-- About app -->
-      <div class="card" style="background:rgba(74,222,128,.05);border-color:rgba(74,222,128,.15);">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div style="font-size:28px;">🌱</div>
-          <div>
-            <div style="font-size:14px;font-weight:800;color:var(--text);">BioBin X · Versjon 1.0</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:3px;">Fra matavfall til fremtiden</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════════ SCREEN: SKANN ════════ -->
-    <div class="screen" id="s-skann">
-      <div class="page-header">
-        <div class="page-title">📸 Skann avfall</div>
-        <div class="page-sub">Ta bilde og registrer matavfall</div>
-      </div>
-
-      <!-- Camera viewfinder -->
-      <div style="margin:0 16px 14px;position:relative;border-radius:24px;overflow:hidden;background:#0a1a0c;border:1px solid var(--border);aspect-ratio:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;" id="cam-area">
-        <!-- Corner guides -->
-        <div style="position:absolute;top:16px;left:16px;width:32px;height:32px;border-top:3px solid var(--green);border-left:3px solid var(--green);border-radius:4px 0 0 0;"></div>
-        <div style="position:absolute;top:16px;right:16px;width:32px;height:32px;border-top:3px solid var(--green);border-right:3px solid var(--green);border-radius:0 4px 0 0;"></div>
-        <div style="position:absolute;bottom:16px;left:16px;width:32px;height:32px;border-bottom:3px solid var(--green);border-left:3px solid var(--green);border-radius:0 0 0 4px;"></div>
-        <div style="position:absolute;bottom:16px;right:16px;width:32px;height:32px;border-bottom:3px solid var(--green);border-right:3px solid var(--green);border-radius:0 0 4px 0;"></div>
-        <!-- Scan line animation -->
-        <div id="scan-line" style="position:absolute;left:16px;right:16px;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);box-shadow:0 0 8px var(--green);animation:scanLine 2s ease-in-out infinite;top:50%;"></div>
-        <!-- Center icon -->
-        <div id="cam-idle" style="text-align:center;">
-          <div style="font-size:48px;margin-bottom:8px;">🗑️</div>
-          <div style="font-size:13px;font-weight:700;color:var(--muted);">Pek mot matavfallet</div>
-          <div style="font-size:11px;color:#4a7a54;margin-top:4px;">Trykk 📸 for å skanne</div>
-        </div>
-        <!-- Result overlay (hidden by default) -->
-        <div id="cam-result" style="display:none;text-align:center;padding:20px;">
-          <div style="font-size:48px;margin-bottom:8px;" id="result-emoji">🍌</div>
-          <div style="font-size:16px;font-weight:900;color:var(--green);" id="result-name">Bananskall oppdaget!</div>
-          <div style="font-size:13px;color:var(--muted);margin-top:6px;" id="result-weight">Estimert vekt: 0.12 kg</div>
-        </div>
-      </div>
-
-      <style>
-        @keyframes scanLine {
-          0%   { top: 20%; opacity: 1; }
-          50%  { top: 80%; opacity: 1; }
-          100% { top: 20%; opacity: 1; }
-        }
-        @keyframes popIn {
-          0%   { transform: scale(0.7); opacity: 0; }
-          70%  { transform: scale(1.1); }
-          100% { transform: scale(1);   opacity: 1; }
-        }
-      </style>
-
-      <!-- Shutter button -->
-      <div style="display:flex;justify-content:center;gap:24px;align-items:center;margin:0 16px 14px;">
-        <div onclick="resetScan()" style="width:48px;height:48px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;">🔄</div>
-        <div onclick="doScan()" id="shutter-btn" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--green2),var(--lime));display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;box-shadow:0 0 24px rgba(74,222,128,.4);transition:transform .15s;" onmousedown="this.style.transform='scale(.9)'" onmouseup="this.style.transform='scale(1)'">📸</div>
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;">💡</div>
-      </div>
-
-      <!-- Result card (hidden by default) -->
-      <div id="result-card" style="display:none;" class="card">
-        <div class="card-title">Registrert!</div>
-        <div style="display:flex;align-items:center;gap:14px;">
-          <div style="font-size:40px;" id="rc-emoji">🍌</div>
-          <div style="flex:1;">
-            <div style="font-size:15px;font-weight:900;color:var(--text);" id="rc-name">Bananskall</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:3px;" id="rc-weight">0.12 kg · Matavfall ✅</div>
-          </div>
-          <div style="font-size:18px;font-weight:900;color:var(--green);" id="rc-pts">+5 ⭐</div>
-        </div>
-        <div style="margin-top:12px;">
-          <div class="prog-track">
-            <div class="prog-fill" id="rc-bar" style="width:0%"></div>
-          </div>
-          <div style="font-size:11px;color:var(--muted);margin-top:5px;text-align:center;" id="rc-bio">Kan lage ~0.006 L biogass 🔋</div>
-        </div>
-      </div>
-
-      <!-- Tips -->
-      <div class="card" style="background:rgba(74,222,128,.05);border-color:rgba(74,222,128,.15);">
-        <div class="card-title">Hva kan skannes?</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div style="font-size:12px;color:var(--muted);">🍌 Fruktskrell</div>
-          <div style="font-size:12px;color:var(--muted);">🥦 Grønnsaker</div>
-          <div style="font-size:12px;color:var(--muted);">🍞 Gammelt brød</div>
-          <div style="font-size:12px;color:var(--muted);">🥚 Matrester</div>
-          <div style="font-size:12px;color:var(--muted);">☕ Kaffegrut</div>
-          <div style="font-size:12px;color:var(--muted);">🍎 Frukt</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════════ SCREEN: BØTTE ════════ -->
-    <div class="screen" id="s-botte">
-      <div class="page-header">
-        <div class="page-title">🗑️ Legg til bøtte</div>
-        <div class="page-sub">Koble din BioBin X-bøtte til appen</div>
-      </div>
-
-      <!-- Connected bins -->
-      <div class="card">
-        <div class="card-title">Mine bøtter (1)</div>
-        <div class="activity-item">
-          <div class="act-icon" style="background:rgba(74,222,128,.15);font-size:22px;">🗑️</div>
-          <div class="act-text">
-            <div class="act-main">BioBin X – Klasserom 7B</div>
-            <div class="act-time" style="color:var(--green);">🟢 Tilkoblet · Batteri 87%</div>
-          </div>
-          <div style="font-size:11px;color:#ef4444;font-weight:700;cursor:pointer;">Fjern</div>
-        </div>
-      </div>
-
-      <!-- Add new bin -->
-      <div class="card" style="background:linear-gradient(135deg,rgba(74,222,128,.06),rgba(163,230,53,.03));border-color:rgba(74,222,128,.2);">
-        <div class="card-title">Legg til ny bøtte</div>
-
-        <!-- Step 1: Name -->
-        <div style="margin-bottom:14px;">
-          <div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px;">1. Gi bøtten et navn</div>
-          <input id="bin-name" type="text" placeholder="F.eks. Klasserom 7B, Kantine..."
-            style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;outline:none;"
-            onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'">
-        </div>
-
-        <!-- Step 2: Connection method -->
-        <div style="margin-bottom:14px;">
-          <div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:8px;">2. Velg tilkoblingsmetode</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-            <div id="btn-bt" onclick="selectConn('bt')" style="padding:12px;border-radius:12px;border:2px solid var(--green);background:rgba(74,222,128,.1);text-align:center;cursor:pointer;transition:all .2s;">
-              <div style="font-size:22px;">📡</div>
-              <div style="font-size:12px;font-weight:800;color:var(--green);margin-top:4px;">Bluetooth</div>
-            </div>
-            <div id="btn-wifi" onclick="selectConn('wifi')" style="padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;text-align:center;cursor:pointer;transition:all .2s;">
-              <div style="font-size:22px;">📶</div>
-              <div style="font-size:12px;font-weight:800;color:var(--muted);margin-top:4px;">WiFi</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Step 3: QR / ID -->
-        <div style="margin-bottom:16px;">
-          <div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px;">3. Skriv inn bøtte-ID eller skann QR</div>
-          <div style="display:flex;gap:8px;">
-            <input id="bin-id" type="text" placeholder="F.eks. BBX-2024-A3F9"
-              style="flex:1;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-family:'Space Mono',monospace;font-size:13px;outline:none;letter-spacing:1px;"
-              onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'">
-            <div onclick="scanQR()" style="width:48px;height:48px;border-radius:12px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;flex-shrink:0;">📷</div>
-          </div>
-        </div>
-
-        <!-- Connect button -->
-        <div onclick="connectBin()" id="connect-btn"
-          style="width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,var(--green2),var(--lime));text-align:center;font-size:15px;font-weight:900;color:#0a1a0c;cursor:pointer;transition:transform .15s;"
-          onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform='scale(1)'">
-          Koble til bøtte 🗑️
-        </div>
-      </div>
-
-      <!-- Status message -->
-      <div id="conn-status" style="display:none;" class="card">
-        <div style="text-align:center;" id="conn-status-inner"></div>
-      </div>
-
-      <!-- Tips -->
-      <div class="card" style="background:rgba(59,130,246,.06);border-color:rgba(59,130,246,.2);">
-        <div style="display:flex;gap:12px;align-items:flex-start;">
-          <div style="font-size:24px;">💡</div>
-          <div>
-            <div style="font-size:13px;font-weight:800;color:#60a5fa;">Tips</div>
-            <div style="font-size:12px;color:#93c5fd;margin-top:4px;line-height:1.6;">
-              Du finner bøtte-ID-en på klistremerket under BioBin X-bøtten. Sørg for at bøtten er slått på og innen 5 meter.
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════════ SCREEN: STATISTIKK ════════ -->
-    <div class="screen" id="s-stats">
-      <div class="page-header">
-        <div class="page-title">📊 Statistikk</div>
-        <div class="page-sub">Klasse 7B · Oversikt over tid</div>
-      </div>
-
-      <!-- Period selector -->
-      <div style="display:flex;gap:8px;margin:0 16px 14px;">
-        <div id="per-uke" onclick="setPeriod('uke')" style="flex:1;padding:8px;border-radius:10px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.4);text-align:center;font-size:12px;font-weight:800;color:var(--green);cursor:pointer;">Uke</div>
-        <div id="per-mnd" onclick="setPeriod('mnd')" style="flex:1;padding:8px;border-radius:10px;background:transparent;border:1px solid var(--border);text-align:center;font-size:12px;font-weight:800;color:var(--muted);cursor:pointer;">Måned</div>
-        <div id="per-ar" onclick="setPeriod('ar')" style="flex:1;padding:8px;border-radius:10px;background:transparent;border:1px solid var(--border);text-align:center;font-size:12px;font-weight:800;color:var(--muted);cursor:pointer;">År</div>
-      </div>
-
-      <!-- Main chart -->
-      <div class="card">
-        <div class="card-title">Matavfall kastet (kg)</div>
-        <div style="display:flex;align-items:flex-end;gap:6px;height:90px;margin-top:8px;" id="stat-bars">
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--green2),rgba(74,222,128,.3));height:52px;"></div><div style="font-size:9px;font-weight:700;color:var(--muted);">Man</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--green2),rgba(74,222,128,.3));height:70px;"></div><div style="font-size:9px;font-weight:700;color:var(--muted);">Tir</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--green2),rgba(74,222,128,.3));height:45px;"></div><div style="font-size:9px;font-weight:700;color:var(--muted);">Ons</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--lime),rgba(163,230,53,.3));height:80px;box-shadow:0 0 10px rgba(163,230,53,.3);"></div><div style="font-size:9px;font-weight:700;color:var(--lime);">Tor</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--green2),rgba(74,222,128,.3));height:60px;"></div><div style="font-size:9px;font-weight:700;color:var(--muted);">Fre</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,rgba(74,222,128,.3),rgba(74,222,128,.1));height:20px;"></div><div style="font-size:9px;font-weight:700;color:var(--muted);">Lør</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,rgba(74,222,128,.3),rgba(74,222,128,.1));height:10px;"></div><div style="font-size:9px;font-weight:700;color:var(--muted);">Søn</div></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
-          <div style="text-align:center;"><div style="font-size:10px;color:var(--muted);font-weight:700;">Totalt</div><div style="font-family:'Space Mono',monospace;font-size:16px;color:var(--green);font-weight:700;">34.1 kg</div></div>
-          <div style="text-align:center;"><div style="font-size:10px;color:var(--muted);font-weight:700;">Snitt/dag</div><div style="font-family:'Space Mono',monospace;font-size:16px;color:var(--lime);font-weight:700;">4.9 kg</div></div>
-          <div style="text-align:center;"><div style="font-size:10px;color:var(--muted);font-weight:700;">Rekord</div><div style="font-family:'Space Mono',monospace;font-size:16px;color:var(--yellow);font-weight:700;">8.2 kg</div></div>
-        </div>
-      </div>
-
-      <!-- Trend cards -->
-      <div class="stat-row">
-        <div class="stat-card">
-          <div class="s-icon">📈</div>
-          <div class="s-val" style="color:var(--lime);">+23%</div>
-          <div class="s-lbl">Mer enn forrige uke</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-icon">🏆</div>
-          <div class="s-val" style="color:var(--yellow);">#4</div>
-          <div class="s-lbl">Av 14 klasser</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-icon">⚡</div>
-          <div class="s-val" style="color:var(--green);">8.4 L</div>
-          <div class="s-lbl">Biogass denne uka</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-icon">🌿</div>
-          <div class="s-val" style="color:#60a5fa;">12 kg</div>
-          <div class="s-lbl">CO₂ spart uka</div>
-        </div>
-      </div>
-
-      <!-- Top wasters -->
-      <div class="card">
-        <div class="card-title">Mest kastet denne uken</div>
-        <div class="activity-item">
-          <div class="act-icon">🍞</div>
-          <div class="act-text"><div class="act-main">Brød og bakst</div><div class="act-time">12.4 kg · 36%</div></div>
-          <div style="width:60px;"><div class="prog-track" style="height:8px;"><div class="prog-fill" style="width:36%;"></div></div></div>
-        </div>
-        <div class="activity-item">
-          <div class="act-icon">🥦</div>
-          <div class="act-text"><div class="act-main">Grønnsaker</div><div class="act-time">9.8 kg · 29%</div></div>
-          <div style="width:60px;"><div class="prog-track" style="height:8px;"><div class="prog-fill" style="width:29%;"></div></div></div>
-        </div>
-        <div class="activity-item">
-          <div class="act-icon">🍌</div>
-          <div class="act-text"><div class="act-main">Fruktskrell</div><div class="act-time">7.2 kg · 21%</div></div>
-          <div style="width:60px;"><div class="prog-track" style="height:8px;"><div class="prog-fill" style="width:21%;"></div></div></div>
-        </div>
-        <div class="activity-item" style="border:none;">
-          <div class="act-icon">☕</div>
-          <div class="act-text"><div class="act-main">Kaffegrut</div><div class="act-time">4.7 kg · 14%</div></div>
-          <div style="width:60px;"><div class="prog-track" style="height:8px;"><div class="prog-fill" style="width:14%;"></div></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════════ SCREEN: QUIZ ════════ -->
-    <div class="screen" id="s-quiz">
-      <div class="page-header">
-        <div class="page-title">🧪 Miljøquiz</div>
-        <div class="page-sub">Test hva du vet – tjen poeng!</div>
-      </div>
-
-      <!-- Quiz hero -->
-      <div class="card" style="background:linear-gradient(135deg,#1a1a00,#120f00);border-color:#4a3a00;text-align:center;">
-        <div style="font-size:40px;margin-bottom:8px;">🧠</div>
-        <div style="font-size:16px;font-weight:900;color:var(--yellow);">Dagens quiz</div>
-        <div style="font-size:12px;color:#fef08a;margin-top:4px;">5 spørsmål · Opptil +250 ⭐</div>
-        <div style="display:flex;justify-content:center;gap:6px;margin-top:12px;" id="q-dots">
-          <div style="width:10px;height:10px;border-radius:50%;background:var(--yellow);"></div>
-          <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);"></div>
-          <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);"></div>
-          <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);"></div>
-          <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);"></div>
-        </div>
-      </div>
-
-      <!-- Question card -->
-      <div class="card" id="q-card">
-        <div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Spørsmål <span id="q-num">1</span> av 5</div>
-        <div style="font-size:15px;font-weight:800;color:var(--text);line-height:1.5;margin-bottom:16px;" id="q-text">Hva er biogass laget av?</div>
-        <div style="display:flex;flex-direction:column;gap:8px;" id="q-options">
-          <div class="q-opt" onclick="answerQ(0)" style="padding:12px 14px;border-radius:12px;border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;">🌱 Organisk avfall og bakterier</div>
-          <div class="q-opt" onclick="answerQ(1)" style="padding:12px 14px;border-radius:12px;border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;">🔋 Solenergi og batteri</div>
-          <div class="q-opt" onclick="answerQ(2)" style="padding:12px 14px;border-radius:12px;border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;">💧 Vann og mineraler</div>
-          <div class="q-opt" onclick="answerQ(3)" style="padding:12px 14px;border-radius:12px;border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;">🪨 Olje og kull</div>
-        </div>
-        <div id="q-feedback" style="display:none;margin-top:12px;padding:12px;border-radius:10px;font-size:13px;font-weight:700;"></div>
-        <div id="q-next-btn" onclick="nextQuestion()" style="display:none;margin-top:12px;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--green2),var(--lime));text-align:center;font-size:14px;font-weight:900;color:#0a1a0c;cursor:pointer;">Neste spørsmål →</div>
-      </div>
-
-      <!-- Past quizzes -->
-      <div class="card">
-        <div class="card-title">Fullførte quizer</div>
-        <div class="activity-item">
-          <div class="act-icon">✅</div>
-          <div class="act-text"><div class="act-main">Hva er anaerob nedbrytning?</div><div class="act-time">I går · 4/5 riktige</div></div>
-          <div class="act-pts">+200 ⭐</div>
-        </div>
-        <div class="activity-item" style="border:none;">
-          <div class="act-icon">✅</div>
-          <div class="act-text"><div class="act-main">CO₂ og klimagasser</div><div class="act-time">For 2 dager siden · 5/5 riktige</div></div>
-          <div class="act-pts">+250 ⭐</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════════ SCREEN: VARSLER ════════ -->
-    <div class="screen" id="s-varsler">
-      <div class="page-header">
-        <div class="page-title">🔔 Varsler</div>
-        <div class="page-sub">Påminnelser og belønninger</div>
-      </div>
-
-      <!-- Unread notifications -->
-      <div class="card" style="background:linear-gradient(135deg,rgba(251,146,60,.08),rgba(251,146,60,.03));border-color:rgba(251,146,60,.3);">
-        <div class="card-title" style="color:var(--orange);">Nye varsler (3)</div>
-        <div class="activity-item">
-          <div class="act-icon" style="background:rgba(253,224,71,.1);">🏆</div>
-          <div class="act-text"><div class="act-main" style="color:var(--yellow);">Ny prestasjon låst opp!</div><div class="act-time">«12 dager på rad» · Nå nettopp</div></div>
-          <div class="act-pts" style="color:var(--yellow);">+200 ⭐</div>
-        </div>
-        <div class="activity-item">
-          <div class="act-icon" style="background:rgba(167,139,250,.1);">🏫</div>
-          <div class="act-text"><div class="act-main" style="color:#c4b5fd;">Klassen klatret til #4!</div><div class="act-time">Konkurranseranking oppdatert · 2t</div></div>
-          <div style="font-size:11px;color:#a78bfa;font-weight:700;">NY</div>
-        </div>
-        <div class="activity-item" style="border:none;">
-          <div class="act-icon" style="background:rgba(74,222,128,.1);">🗑️</div>
-          <div class="act-text"><div class="act-main">BioBin X er nesten full</div><div class="act-time">Bøtten er 85% full · 3t</div></div>
-          <div style="font-size:11px;color:var(--orange);font-weight:700;">!</div>
-        </div>
-      </div>
-
-      <!-- Notification settings -->
-      <div class="card">
-        <div class="card-title">Varselinnstillinger</div>
-        <div class="activity-item">
-          <div class="act-icon">🗑️</div>
-          <div class="act-text"><div class="act-main">Bøtte nesten full</div><div class="act-time">Varsle når over 80%</div></div>
-          <div onclick="toggleSwitch(this)" style="width:42px;height:24px;background:var(--green2);border-radius:100px;position:relative;cursor:pointer;transition:background .2s;">
-            <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;right:2px;top:2px;transition:left .2s;"></div>
-          </div>
-        </div>
-        <div class="activity-item">
-          <div class="act-icon">⭐</div>
-          <div class="act-text"><div class="act-main">Ny prestasjon</div><div class="act-time">Varsle ved nye achievements</div></div>
-          <div onclick="toggleSwitch(this)" style="width:42px;height:24px;background:var(--green2);border-radius:100px;position:relative;cursor:pointer;transition:background .2s;">
-            <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;right:2px;top:2px;"></div>
-          </div>
-        </div>
-        <div class="activity-item">
-          <div class="act-icon">🏫</div>
-          <div class="act-text"><div class="act-main">Klassekonkurranse</div><div class="act-time">Oppdateringer i rangeringen</div></div>
-          <div onclick="toggleSwitch(this)" style="width:42px;height:24px;background:var(--green2);border-radius:100px;position:relative;cursor:pointer;transition:background .2s;">
-            <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;right:2px;top:2px;"></div>
-          </div>
-        </div>
-        <div class="activity-item">
-          <div class="act-icon">🧪</div>
-          <div class="act-text"><div class="act-main">Daglig quiz</div><div class="act-time">Påminnelse kl. 09:00</div></div>
-          <div onclick="toggleSwitch(this)" style="width:42px;height:24px;background:rgba(255,255,255,.1);border-radius:100px;position:relative;cursor:pointer;transition:background .2s;">
-            <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;left:2px;top:2px;"></div>
-          </div>
-        </div>
-        <div class="activity-item" style="border:none;">
-          <div class="act-icon">📅</div>
-          <div class="act-text"><div class="act-main">Ukentlig oppsummering</div><div class="act-time">Hver fredag kl. 14:00</div></div>
-          <div onclick="toggleSwitch(this)" style="width:42px;height:24px;background:var(--green2);border-radius:100px;position:relative;cursor:pointer;transition:background .2s;">
-            <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;right:2px;top:2px;"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════════ SCREEN: BELØNNINGER ════════ -->
-    <div class="screen" id="s-rewards">
-      <div class="page-header">
-        <div class="page-title">🎁 Belønninger</div>
-        <div class="page-sub">Bytt poeng mot premier!</div>
-      </div>
-
-      <!-- Points balance -->
-      <div class="card" style="background:linear-gradient(135deg,#2a1a00,#1a1000);border-color:#4a3000;text-align:center;">
-        <div style="font-size:11px;font-weight:800;color:#fef08a;letter-spacing:1px;text-transform:uppercase;">Dine poeng</div>
-        <div style="font-family:'Space Mono',monospace;font-size:48px;font-weight:700;color:var(--yellow);text-shadow:0 0 20px rgba(253,224,71,.4);line-height:1.1;">1 240</div>
-        <div style="font-size:12px;color:#fef08a;margin-top:4px;">⭐ tilgjengelig for bytte</div>
-      </div>
-
-      <!-- Rewards grid -->
-      <div class="card" style="margin-bottom:10px;">
-        <div class="card-title">Tilgjengelige premier</div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 16px 14px;">
-        <div onclick="claimReward(this,500,'Fri friminutt')" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;">
-          <div style="font-size:32px;margin-bottom:6px;">🕐</div>
-          <div style="font-size:13px;font-weight:800;color:var(--text);">Ekstra friminutt</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">10 min ekstra pause</div>
-          <div style="margin-top:10px;padding:6px;border-radius:8px;background:rgba(253,224,71,.1);border:1px solid rgba(253,224,71,.3);font-size:12px;font-weight:800;color:var(--yellow);">500 ⭐</div>
-        </div>
-        <div onclick="claimReward(this,750,'Klimadiplom')" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;">
-          <div style="font-size:32px;margin-bottom:6px;">📜</div>
-          <div style="font-size:13px;font-weight:800;color:var(--text);">Klimadiplom</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Offisielt miljødiplom</div>
-          <div style="margin-top:10px;padding:6px;border-radius:8px;background:rgba(253,224,71,.1);border:1px solid rgba(253,224,71,.3);font-size:12px;font-weight:800;color:var(--yellow);">750 ⭐</div>
-        </div>
-        <div onclick="claimReward(this,1000,'Klassefilm')" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;">
-          <div style="font-size:32px;margin-bottom:6px;">🎬</div>
-          <div style="font-size:13px;font-weight:800;color:var(--text);">Filmtime i klassen</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Klassens valg!</div>
-          <div style="margin-top:10px;padding:6px;border-radius:8px;background:rgba(253,224,71,.1);border:1px solid rgba(253,224,71,.3);font-size:12px;font-weight:800;color:var(--yellow);">1 000 ⭐</div>
-        </div>
-        <div onclick="claimReward(this,1200,'BioBin X-klistremerker')" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;">
-          <div style="font-size:32px;margin-bottom:6px;">🌿</div>
-          <div style="font-size:13px;font-weight:800;color:var(--text);">BioBin X-klistremerker</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Eksklusive stickers</div>
-          <div style="margin-top:10px;padding:6px;border-radius:8px;background:rgba(253,224,71,.1);border:1px solid rgba(253,224,71,.3);font-size:12px;font-weight:800;color:var(--yellow);">1 200 ⭐</div>
-        </div>
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;text-align:center;opacity:.4;">
-          <div style="font-size:32px;margin-bottom:6px;">🎒</div>
-          <div style="font-size:13px;font-weight:800;color:var(--text);">BioBin X-ryggsekk</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Limited edition</div>
-          <div style="margin-top:10px;padding:6px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);font-size:12px;font-weight:800;color:var(--muted);">🔒 2 500 ⭐</div>
-        </div>
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;text-align:center;opacity:.4;">
-          <div style="font-size:32px;margin-bottom:6px;">🌳</div>
-          <div style="font-size:13px;font-weight:800;color:var(--text);">Plant et tre!</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Vi planter et ekte tre</div>
-          <div style="margin-top:10px;padding:6px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);font-size:12px;font-weight:800;color:var(--muted);">🔒 5 000 ⭐</div>
-        </div>
-      </div>
-
-      <!-- Claimed -->
-      <div class="card">
-        <div class="card-title">Innløste premier</div>
-        <div class="activity-item" style="border:none;">
-          <div class="act-icon">📜</div>
-          <div class="act-text"><div class="act-main">Klimadiplom</div><div class="act-time">Innløst 28. feb · Levert av lærer</div></div>
-          <div style="font-size:11px;color:var(--green);font-weight:800;">✅</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- screens end -->
-
-
-  </div><!-- /phone-inner -->
+<div class="phone-inner">
+<div class="notch"></div>
+<!-- ════════ SHARED TOP BAR ════════ -->
+<div style="position:sticky;top:0;z-index:300;background:rgba(13,26,16,.98);backdrop-filter:blur(20px);">
+<!-- Status bar -->
+<div class="status-bar">
+<span>09:41</span>
+<div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--green);font-weight:700;">BioBin X</div>
+<div class="status-icons">📶 🔋</div>
+</div>
+<!-- Nav -->
+<nav class="bottom-nav">
+<div class="nav-item active" onclick="showScreen('home',this)">
+<div class="nav-icon">🏠</div><div class="nav-label">HJEM</div>
+</div>
+<div class="nav-item" onclick="showScreen('energy',this)">
+<div class="nav-icon">⚡</div><div class="nav-label">ENERGI</div>
+</div>
+<div class="nav-item" onclick="showScreen('skann',this)">
+<div class="nav-icon">📸</div><div class="nav-label">SKANN</div>
+</div>
+<div class="nav-item" onclick="showScreen('env',this)">
+<div class="nav-icon">🌍</div><div class="nav-label">MILJØ</div>
+</div>
+<div class="nav-item" onclick="showScreen('points',this)">
+<div class="nav-icon">⭐</div><div class="nav-label">POENG</div>
+</div>
+<div class="nav-item" onclick="showScreen('class',this)">
+<div class="nav-icon">🏫</div><div class="nav-label">KLASSE</div>
+</div>
+<div class="nav-item" onclick="showScreen('stats',this)">
+<div class="nav-icon">📊</div><div class="nav-label">STATISTIKK</div>
+</div>
+<div class="nav-item" onclick="showScreen('quiz',this)">
+<div class="nav-icon">🧪</div><div class="nav-label">QUIZ</div>
+</div>
+<div class="nav-item" onclick="showScreen('varsler',this)">
+<div class="nav-icon">🔔</div><div class="nav-label">VARSLER</div>
+</div>
+<div class="nav-item" onclick="showScreen('rewards',this)">
+<div class="nav-icon">🎁</div><div class="nav-label">PREMIER</div>
+</div>
+<div class="nav-item" onclick="showScreen('botte',this)">
+<div class="nav-icon">➕</div><div class="nav-label">BØTTE</div>
+</div>
+<div class="nav-item" onclick="showScreen('info',this)">
+<div class="nav-icon">ℹ️</div><div class="nav-label">INFO</div>
+</div>
+<div class="nav-item" onclick="showScreen('profil',this)">
+<div class="nav-icon">👤</div><div class="nav-label">PROFIL</div>
+</div>
+</nav>
+</div>
+
+<div class="screen active" id="s-home">
+<div class="page-header">
+<div class="page-title">God morgen,<br>Klasse 7B! 👋</div>
+<div class="page-sub">Mandag 8. mars</div>
+</div>
+<!-- Live connection -->
+<div class="conn-bar">
+<div class="pulse"></div>
+<span>BioBin X-bøtten er koblet til 🟢 Live</span>
+</div>
+<!-- Hero card -->
+<div id="s-home" style="position:relative;">
+<div class="hero-banner">
+<div class="hero-label">Kastet i dag</div>
+<div class="hero-value" id="waste-num">2.4<span style="font-size:22px"> kg</span></div>
+<div class="hero-sub">av 5 kg dagsmål</div>
+<div style="margin-top:14px;">
+<div class="prog-track">
+<div class="prog-fill" id="waste-bar" style="width:48%"></div>
+</div>
+<div style="display:flex;justify-content:space-between;margin-top:6px;">
+<span style="font-size:11px;font-weight:700;color:var(--muted);">0 kg</span>
+<span style="font-size:11px;font-weight:700;color:var(--green);">48%</span>
+<span style="font-size:11px;font-weight:700;color:var(--muted);">5 kg</span>
+</div>
+</div>
+<div class="hero-emoji">🗑️</div>
+</div>
+</div>
+<!-- Stats -->
+<div class="stat-row">
+<div class="stat-card">
+<div class="s-icon">⚡</div>
+<div class="s-val">120</div>
+<div class="s-lbl">Wh energi i dag</div>
+</div>
+<div class="stat-card">
+<div class="s-icon">🌿</div>
+<div class="s-val">0.8</div>
+<div class="s-lbl">kg CO₂ spart</div>
+</div>
+<div class="stat-card">
+<div class="s-icon">🏆</div>
+<div class="s-val">+35</div>
+<div class="s-lbl">poeng i dag</div>
+</div>
+<div class="stat-card">
+<div class="s-icon">🔥</div>
+<div class="s-val">12</div>
+<div class="s-lbl">dager på rad!</div>
+</div>
+</div>
+<!-- Activity feed -->
+<div class="card">
+<div class="card-title">Siste aktivitet</div>
+<div class="activity-item">
+<div class="act-icon">🍌</div>
+<div class="act-text">
+<div class="act-main">Bananskall kastet</div>
+<div class="act-time">For 12 min siden · 0.15 kg</div>
+</div>
+<div class="act-pts">+5 ⭐</div>
+</div>
+<div class="activity-item">
+<div class="act-icon">🥦</div>
+<div class="act-text">
+<div class="act-main">Grønnsaksskrell</div>
+<div class="act-time">For 1 time siden · 0.3 kg</div>
+</div>
+<div class="act-pts">+10 ⭐</div>
+</div>
+<div class="activity-item">
+<div class="act-icon">🍞</div>
+<div class="act-text">
+<div class="act-main">Gammelt brød</div>
+<div class="act-time">For 2 timer siden · 0.5 kg</div>
+</div>
+<div class="act-pts">+15 ⭐</div>
+</div>
+</div>
+<!-- Tip card -->
+<div class="card" style="background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(163,230,53,.05));border-color:rgba(74,222,128,.2);">
+<div style="display:flex;gap:12px;align-items:flex-start;">
+<div style="font-size:28px;">💡</div>
+<div>
+<div style="font-size:13px;font-weight:800;color:var(--green);">Visste du?</div>
+<div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6;">
+1 kg matavfall kan lage nok biogass til å lade en mobiltelefon <strong style="color:var(--text);">over 50 ganger!</strong> 📱
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ════════ SCREEN: ENERGI ════════ -->
+<div class="screen" id="s-energy">
+<div class="page-header">
+<div class="page-title">⚡ Energimåler</div>
+<div class="page-sub">Se hva matavfallet ditt kan bli til</div>
+</div>
+<!-- Gauge -->
+<div class="card" style="text-align:center;">
+<div class="card-title">Biogass produsert denne uken</div>
+<div class="gauge-wrap">
+<svg class="gauge-svg" viewBox="0 0 220 130">
+<defs>
+<linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+<stop offset="0%" stop-color="#22c55e"/>
+<stop offset="100%" stop-color="#a3e635"/>
+</linearGradient>
+</defs>
+<!-- background arc -->
+<path d="M 20 120 A 90 90 0 0 1 200 120" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="16" stroke-linecap="round"/>
+<!-- value arc -->
+<path d="M 20 120 A 90 90 0 0 1 200 120" fill="none" stroke="url(#gaugeGrad)" stroke-width="16" stroke-linecap="round"
+stroke-dasharray="283" stroke-dashoffset="85" style="filter:drop-shadow(0 0 8px rgba(74,222,128,.6));"/>
+<!-- center text -->
+<text x="110" y="105" text-anchor="middle" font-family="Space Mono" font-size="26" font-weight="700" fill="#4ade80">1.68</text>
+<text x="110" y="122" text-anchor="middle" font-family="Nunito" font-size="11" font-weight="700" fill="#86efac">liter biogass</text>
+</svg>
+</div>
+<div style="display:flex;justify-content:space-around;margin-top:8px;">
+<div><div style="font-size:11px;font-weight:700;color:var(--muted);">Denne uka</div><div style="font-family:'Space Mono',monospace;font-size:18px;color:var(--lime);">8.4 L</div></div>
+<div style="width:1px;background:var(--border);"></div>
+<div><div style="font-size:11px;font-weight:700;color:var(--muted);">Denne måneden</div><div style="font-family:'Space Mono',monospace;font-size:18px;color:var(--lime);">34 L</div></div>
+<div style="width:1px;background:var(--border);"></div>
+<div><div style="font-size:11px;font-weight:700;color:var(--muted);">Totalt</div><div style="font-family:'Space Mono',monospace;font-size:18px;color:var(--lime);">142 L</div></div>
+</div>
+</div>
+<!-- Energy equivalents -->
+<div class="card">
+<div class="card-title">Dette tilsvarer...</div>
+</div>
+<div class="energy-grid">
+<div class="e-tile">
+<div class="e-icon">📱</div>
+<div class="e-val">710</div>
+<div class="e-lbl">mobillading</div>
+</div>
+<div class="e-tile">
+<div class="e-icon">💡</div>
+<div class="e-val">17</div>
+<div class="e-lbl">timer med lys</div>
+</div>
+<div class="e-tile">
+<div class="e-icon">🎮</div>
+<div class="e-val">48</div>
+<div class="e-lbl">t gaming</div>
+</div>
+<div class="e-tile">
+<div class="e-icon">🚿</div>
+<div class="e-val">3</div>
+<div class="e-lbl">varme dusjer</div>
+</div>
+<div class="e-tile">
+<div class="e-icon">🍕</div>
+<div class="e-val">8</div>
+<div class="e-lbl">pizzaer bakt</div>
+</div>
+<div class="e-tile">
+<div class="e-icon">🚲</div>
+<div class="e-val">62</div>
+<div class="e-lbl">km el-sykkel</div>
+</div>
+</div>
+<!-- How it works -->
+<div class="card">
+<div class="card-title">Slik lager vi energi</div>
+</div>
+<div class="process-steps">
+<div class="step">
+<div class="step-num">1</div>
+<div class="step-body">
+<div class="step-title">Du kaster mat i BioBin X 🗑️</div>
+<div class="step-desc">Bøtten veier maten og sender data til appen med en gang!</div>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div class="step-body">
+<div class="step-title">Bakterier spiser maten 🦠</div>
+<div class="step-desc">Inne i reaktoren bryter mikroorganismer ned matavfallet uten oksygen.</div>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div class="step-body">
+<div class="step-title">Biogass dannes ⚗️</div>
+<div class="step-desc">Når bakterier spiser mat, lager de metan-gass – det er biogass!</div>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div class="step-body">
+<div class="step-title">Energi til strøm og varme ⚡</div>
+<div class="step-desc">Biogassen brennes for å lage elektrisk strøm og varme til hus og skoler.</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ════════ SCREEN: MILJØ ════════ -->
+<div class="screen" id="s-env">
+<div class="page-header">
+<div class="page-title">🌍 Miljøeffekt</div>
+<div class="page-sub">Klassen din gjør en forskjell!</div>
+</div>
+<!-- CO2 hero -->
+<div class="co2-hero">
+<div style="font-size:12px;font-weight:800;color:#60a5fa;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">CO₂ spart totalt</div>
+<div class="co2-num">47.3</div>
+<div class="co2-unit">kg CO₂</div>
+<div class="co2-lbl">Dette er klassen din sin innsats! 🎉</div>
+</div>
+<!-- Comparisons -->
+<div class="env-compare">
+<div class="env-card">
+<div class="ec-icon">🌳</div>
+<div class="ec-val">2.4 trær</div>
+<div class="ec-lbl">Som å plante to nye trær</div>
+</div>
+<div class="env-card">
+<div class="ec-icon">🚗</div>
+<div class="ec-val">188 km</div>
+<div class="ec-lbl">Bilkjøring som ble unngått</div>
+</div>
+<div class="env-card">
+<div class="ec-icon">✈️</div>
+<div class="ec-val">7%</div>
+<div class="ec-lbl">Av en flygning Oslo–London</div>
+</div>
+<div class="env-card">
+<div class="ec-icon">🍔</div>
+<div class="ec-val">24 stk</div>
+<div class="ec-lbl">Hamburgere unngått</div>
+</div>
+</div>
+<!-- Weekly chart -->
+<div class="card">
+<div class="card-title">CO₂ spart denne uken (kg)</div>
+<div class="chart-bars">
+<div class="bar-wrap"><div class="bar" style="height:40px;"></div><div class="bar-day">Man</div></div>
+<div class="bar-wrap"><div class="bar" style="height:65px;"></div><div class="bar-day">Tir</div></div>
+<div class="bar-wrap"><div class="bar" style="height:50px;"></div><div class="bar-day">Ons</div></div>
+<div class="bar-wrap"><div class="bar" style="height:75px;"></div><div class="bar-day">Tor</div></div>
+<div class="bar-wrap"><div class="bar" style="height:55px;opacity:.5;"></div><div class="bar-day">Fre</div></div>
+<div class="bar-wrap"><div class="bar" style="height:20px;opacity:.3;"></div><div class="bar-day">Lør</div></div>
+<div class="bar-wrap"><div class="bar" style="height:10px;opacity:.2;"></div><div class="bar-day">Søn</div></div>
+</div>
+</div>
+<!-- Fun fact -->
+<div class="card" style="background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.2);">
+<div style="display:flex;gap:12px;align-items:flex-start;">
+<div style="font-size:28px;">🌡️</div>
+<div>
+<div style="font-size:13px;font-weight:800;color:#60a5fa;">Klimafakta</div>
+<div style="font-size:12px;color:#93c5fd;margin-top:4px;line-height:1.6;">
+Matavfall på søppelfyllinger lager metan – en klimagass som er <strong style="color:var(--text);">25 ganger sterkere</strong> enn CO₂. Biogass stopper dette!
+</div>
+</div>
+</div>
+</div>
+<div class="card" style="text-align:center;padding:20px;">
+<div style="font-size:32px;margin-bottom:8px;">🌱</div>
+<div style="font-size:15px;font-weight:800;color:var(--text);">Dere er klima-helter!</div>
+<div style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6;">Fortsett å kaste matavfall riktig, og dere kan spare <span style="color:var(--green);font-weight:800;">over 200 kg CO₂</span> dette skoleåret.</div>
+</div>
+</div>
+
+<!-- ════════ SCREEN: POENG ════════ -->
+<div class="screen" id="s-points">
+<div class="page-header">
+<div class="page-title">⭐ Mine poeng</div>
+<div class="page-sub">Du er på god vei – fortsett!</div>
+</div>
+<!-- XP hero -->
+<div class="xp-hero">
+<div class="xp-num">1 240</div>
+<div class="xp-label">Miljøpoeng</div>
+<div class="level-badge">🌿 Nivå 4 – Miljøvokter</div>
+</div>
+<!-- XP progress -->
+<div class="card">
+<div class="card-title">Neste nivå: Klimaforkjemper</div>
+<div class="xp-prog-wrap">
+<div class="xp-prog-track">
+<div class="xp-prog-fill" style="width:62%"></div>
+</div>
+<div class="xp-prog-label">
+<span>1 240 poeng</span>
+<span>500 poeng igjen</span>
+<span>1 750 poeng</span>
+</div>
+</div>
+</div>
+<!-- Achievements -->
+<div class="card" style="margin-bottom:10px;">
+<div class="card-title">Prestasjoner</div>
+</div>
+<div class="achievement-list">
+<div class="ach-item">
+<div class="ach-icon">🌱</div>
+<div class="ach-body">
+<div class="ach-title">Første kast!</div>
+<div class="ach-desc">Du kastet matavfall for første gang</div>
+</div>
+<div class="ach-pts">+50 ⭐</div>
+</div>
+<div class="ach-item">
+<div class="ach-icon">🔥</div>
+<div class="ach-body">
+<div class="ach-title">12 dager på rad!</div>
+<div class="ach-desc">Du har kastet riktig 12 dager i strekk</div>
+</div>
+<div class="ach-pts">+200 ⭐</div>
+</div>
+<div class="ach-item">
+<div class="ach-icon">🏆</div>
+<div class="ach-body">
+<div class="ach-title">10 kg kastet</div>
+<div class="ach-desc">Totalt 10 kg matavfall kildesortert</div>
+</div>
+<div class="ach-pts">+150 ⭐</div>
+</div>
+<div class="ach-item">
+<div class="ach-icon">🌍</div>
+<div class="ach-body">
+<div class="ach-title">Klimaekspert</div>
+<div class="ach-desc">Fullfør klimakvizen</div>
+</div>
+<div class="ach-pts">+100 ⭐</div>
+</div>
+<div class="ach-item locked">
+<div class="ach-icon">🚀</div>
+<div class="ach-body">
+<div class="ach-title">Supersorter 🔒</div>
+<div class="ach-desc">Kast riktig 30 dager på rad</div>
+</div>
+<div class="ach-pts">+500 ⭐</div>
+</div>
+<div class="ach-item locked">
+<div class="ach-icon">💎</div>
+<div class="ach-body">
+<div class="ach-title">Biogass-mester 🔒</div>
+<div class="ach-desc">Bidra til 100 liter biogass</div>
+</div>
+<div class="ach-pts">+1000 ⭐</div>
+</div>
+</div>
+</div>
+
+<!-- ════════ SCREEN: KLASSE ════════ -->
+<div class="screen" id="s-class">
+<div class="page-header">
+<div class="page-title">🏫 Klassekonkurranse</div>
+<div class="page-sub">Hvem samler mest matavfall?</div>
+</div>
+<!-- Competition header -->
+<div class="comp-header">
+<div class="comp-title">🏆 Vårkonkurransen 2025</div>
+<div class="comp-sub">Uke 10–16 · 14 skoler deltar</div>
+<div class="comp-timer">⏱ 18 dager igjen</div>
+</div>
+<!-- Podium -->
+<div class="card">
+<div class="card-title">Topp 3 denne uken</div>
+<div class="podium">
+<div class="pod-item">
+<div class="pod-bar p2">
+<div class="pod-rank">🥈</div>
+<div class="pod-kg">41.2 kg</div>
+</div>
+<div class="pod-name">Smestad<br>7A</div>
+</div>
+<div class="pod-item">
+<div class="pod-bar p1">
+<div class="pod-rank">🥇</div>
+<div class="pod-kg">58.7 kg</div>
+</div>
+<div class="pod-name">Majorstua<br>7C</div>
+</div>
+<div class="pod-item">
+<div class="pod-bar p3">
+<div class="pod-rank">🥉</div>
+<div class="pod-kg">37.4 kg</div>
+</div>
+<div class="pod-name">Vinderen<br>6B</div>
+</div>
+</div>
+</div>
+<!-- Leaderboard -->
+<div class="card" style="margin-bottom:10px;">
+<div class="card-title">Alle klasser</div>
+</div>
+<div class="leaderboard">
+<div class="lb-item">
+<div class="lb-rank">#1</div>
+<div>
+<div class="lb-name">Majorstua 7C</div>
+<div style="font-size:11px;color:var(--muted);">Oslo</div>
+</div>
+<div class="lb-val" style="color:var(--yellow);">58.7 kg</div>
+</div>
+<div class="lb-item">
+<div class="lb-rank">#2</div>
+<div>
+<div class="lb-name">Smestad 7A</div>
+<div style="font-size:11px;color:var(--muted);">Oslo</div>
+</div>
+<div class="lb-val" style="color:#d1d5db;">41.2 kg</div>
+</div>
+<div class="lb-item">
+<div class="lb-rank">#3</div>
+<div>
+<div class="lb-name">Vinderen 6B</div>
+<div style="font-size:11px;color:var(--muted);">Oslo</div>
+</div>
+<div class="lb-val" style="color:#fb923c;">37.4 kg</div>
+</div>
+<div class="lb-item my-class">
+<div class="lb-rank">#4</div>
+<div>
+<div class="lb-name">Vår klasse 7B ⬅️</div>
+<div style="font-size:11px;color:#a78bfa;">Bekkelaget</div>
+</div>
+<div class="lb-val">34.1 kg</div>
+</div>
+<div class="lb-item">
+<div class="lb-rank">#5</div>
+<div>
+<div class="lb-name">Grefsen 6A</div>
+<div style="font-size:11px;color:var(--muted);">Oslo</div>
+</div>
+<div class="lb-val" style="color:var(--muted);">29.8 kg</div>
+</div>
+</div>
+<!-- Motivational card -->
+<div class="card" style="background:rgba(167,139,250,.08);border-color:rgba(167,139,250,.2);">
+<div style="text-align:center;">
+<div style="font-size:28px;margin-bottom:8px;">💪</div>
+<div style="font-size:14px;font-weight:800;color:#e9d5ff;">Dere er bare 3.3 kg unna 3. plass!</div>
+<div style="font-size:12px;color:#c4b5fd;margin-top:6px;line-height:1.6;">Sørg for å kaste alt matavfall i BioBin X de neste dagene. Dere kan gjøre det!</div>
+</div>
+</div>
+</div>
+
+<!-- ════════ SCREEN: INFO ════════ -->
+<div class="screen" id="s-info">
+<div class="page-header">
+<div class="page-title">ℹ️ Info</div>
+<div class="page-sub">Om BioBin X-systemet</div>
+</div>
+<!-- Logo card -->
+<div class="card" style="text-align:center;background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(163,230,53,.04));border-color:rgba(74,222,128,.2);">
+<div style="font-family:'Space Mono',monospace;font-size:26px;font-weight:700;color:var(--green);letter-spacing:-1px;">BioBin X</div>
+<div style="font-size:13px;font-weight:700;color:var(--muted);margin-top:4px;">Fra matavfall til fremtiden 🌱</div>
+</div>
+<!-- About -->
+<div class="card">
+<div class="card-title">Om appen</div>
+<div style="font-size:13px;color:var(--muted);line-height:1.7;">
+BioBin X kombinerer en smart bøtte med en app for å gjøre kildesortering morsomt og lærerikt for elever.
+</div>
+</div>
+<!-- How it works steps -->
+<div class="card">
+<div class="card-title">Slik fungerer systemet</div>
+<div style="display:flex;flex-direction:column;gap:14px;margin-top:4px;">
+<div style="display:flex;gap:12px;align-items:flex-start;">
+<div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--green);">1</div>
+<div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:4px;"><strong style="color:var(--text);">Smart bøtte med sensor</strong> – BioBin X-bøtten har en vekt og Bluetooth-sensor innebygd. Hver gang noen kaster mat, registreres vekten automatisk.</div>
+</div>
+<div style="display:flex;gap:12px;align-items:flex-start;">
+<div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--green);">2</div>
+<div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:4px;"><strong style="color:var(--text);">Live data til appen</strong> – Bøtten sender data til appen via WiFi eller Bluetooth. Elevene ser umiddelbart hvor mye som er kastet og hva det tilsvarer i energi.</div>
+</div>
+<div style="display:flex;gap:12px;align-items:flex-start;">
+<div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--green);">3</div>
+<div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:4px;"><strong style="color:var(--text);">Biogassberegning</strong> – Appen regner ut hvor mye biogass (metan) matavfallet teoretisk kan produsere, basert på type og vekt.</div>
+</div>
+<div style="display:flex;gap:12px;align-items:flex-start;">
+<div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--green);">4</div>
+<div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:4px;"><strong style="color:var(--text);">Gamification</strong> – Elevene tjener miljøpoeng, låser opp prestasjoner og konkurrerer mot andre klasser – noe som motiverer til bedre sorteringsatferd.</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ════════ SCREEN: PROFIL ════════ -->
+<div class="screen" id="s-profil">
+<div class="page-header">
+<div class="page-title">👤 Min profil</div>
+<div class="page-sub">Oscar Aron Bergman · Bekkelaget skole</div>
+</div>
+<!-- Avatar card -->
+<div class="card" style="text-align:center;background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(163,230,53,.04));border-color:rgba(74,222,128,.2);">
+<div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--green2),var(--lime));display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 12px;">🧑‍🎓</div>
+<div style="font-size:20px;font-weight:900;color:var(--text);">Oscar Aron Bergman</div>
+<div style="font-size:13px;color:var(--muted);margin-top:4px;">Bekkelaget skole · Oslo</div>
+<div style="margin-top:12px;">
+<span style="display:inline-block;padding:6px 16px;border-radius:100px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);font-size:13px;font-weight:800;color:var(--green);">🌿 Nivå 4 – Miljøvokter</span>
+</div>
+</div>
+<!-- Stats -->
+<div class="stat-row">
+<div class="stat-card">
+<div class="s-icon">⭐</div>
+<div class="s-val">1 240</div>
+<div class="s-lbl">Totale poeng</div>
+</div>
+<div class="stat-card">
+<div class="s-icon">🗑️</div>
+<div class="s-val">24.6</div>
+<div class="s-lbl">kg kastet totalt</div>
+</div>
+<div class="stat-card">
+<div class="s-icon">🔥</div>
+<div class="s-val">12</div>
+<div class="s-lbl">Dager på rad</div>
+</div>
+<div class="stat-card">
+<div class="s-icon">🏆</div>
+<div class="s-val">4</div>
+<div class="s-lbl">Prestasjoner</div>
+</div>
+</div>
+<!-- Settings -->
+<div class="card">
+<div class="card-title">Innstillinger</div>
+<div class="activity-item">
+<div class="act-icon">🔔</div>
+<div class="act-text">
+<div class="act-main">Varsler</div>
+<div class="act-time">Daglige påminnelser om kildesortering</div>
+</div>
+<div style="width:42px;height:24px;background:var(--green2);border-radius:100px;position:relative;cursor:pointer;">
+<div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;right:2px;top:2px;"></div>
+</div>
+</div>
+<div class="activity-item">
+<div class="act-icon">🏫</div>
+<div class="act-text">
+<div class="act-main">Klasse</div>
+<div class="act-time">7B · Bekkelaget skole</div>
+</div>
+<div style="font-size:12px;color:var(--muted);font-weight:700;">Endre ›</div>
+</div>
+<div class="activity-item">
+<div class="act-icon">🌍</div>
+<div class="act-text">
+<div class="act-main">Språk</div>
+<div class="act-time">Norsk</div>
+</div>
+<div style="font-size:12px;color:var(--muted);font-weight:700;">Endre ›</div>
+</div>
+</div>
+<!-- About app -->
+<div class="card" style="background:rgba(74,222,128,.05);border-color:rgba(74,222,128,.15);">
+<div style="display:flex;align-items:center;gap:12px;">
+<div style="font-size:28px;">🌱</div>
+<div>
+<div style="font-size:14px;font-weight:800;color:var(--text);">BioBin X · Versjon 1.0</div>
+<div style="font-size:12px;color:var(--muted);margin-top:3px;">Fra matavfall til fremtiden</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ════════ SCREEN: SKANN (UPDATED) ════════ -->
+<div class="screen" id="s-skann">
+<div class="page-header">
+<div class="page-title">📸 Skann avfall</div>
+<div class="page-sub">Ta bilde og registrer matavfall</div>
+</div>
+<!-- Camera viewfinder -->
+<div class="cam-container" id="cam-area">
+<video id="camera-feed" autoplay playsinline muted></video>
+<div class="cam-overlay">
+<div class="cam-corner cam-tl"></div>
+<div class="cam-corner cam-tr"></div>
+<div class="cam-corner cam-bl"></div>
+<div class="cam-corner cam-br"></div>
+<div class="scan-line" id="scan-line"></div>
+<!-- Idle State -->
+<div id="cam-idle" class="cam-placeholder">
+<span class="icon">🗑️</span>
+<div style="font-size:13px;font-weight:700;color:var(--muted);">Pek mot matavfallet</div>
+<div style="font-size:11px;color:#4a7a54;margin-top:4px;">Trykk 📸 for å skanne</div>
+</div>
+<!-- Result Overlay -->
+<div id="cam-result" class="cam-result-overlay">
+<div style="font-size:48px;margin-bottom:8px;" id="result-emoji">🍌</div>
+<div style="font-size:16px;font-weight:900;color:var(--green);" id="result-name">Bananskall oppdaget!</div>
+<div style="font-size:13px;color:var(--muted);margin-top:6px;" id="result-weight">Estimert vekt: 0.12 kg</div>
+</div>
+</div>
+</div>
+<!-- Shutter button -->
+<div style="display:flex;justify-content:center;gap:24px;align-items:center;margin:0 16px 14px;">
+<div onclick="resetScan()" style="width:48px;height:48px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;">🔄</div>
+<div onclick="doScan()" id="shutter-btn" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--green2),var(--lime));display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;box-shadow:0 0 24px rgba(74,222,128,.4);transition:transform .15s;" onmousedown="this.style.transform='scale(.9)'" onmouseup="this.style.transform='scale(1)'">📸</div>
+<div style="width:48px;height:48px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;">💡</div>
+</div>
+<!-- Result card (hidden by default) -->
+<div id="result-card" style="display:none;" class="card">
+<div class="card-title">Registrert!</div>
+<div style="display:flex;align-items:center;gap:14px;">
+<div style="font-size:40px;" id="rc-emoji">🍌</div>
+<div style="flex:1;">
+<div style="font-size:15px;font-weight:900;color:var(--text);" id="rc-name">Bananskall</div>
+<div style="font-size:12px;color:var(--muted);margin-top:3px;" id="rc-weight">0.12 kg · Matavfall ✅</div>
+</div>
+<div style="font-size:18px;font-weight:900;color:var(--green);" id="rc-pts">+5 ⭐</div>
+</div>
+<div style="margin-top:12px;">
+<div class="prog-track">
+<div class="prog-fill" id="rc-bar" style="width:0%"></div>
+</div>
+<div style="font-size:11px;color:var(--muted);margin-top:5px;text-align:center;" id="rc-bio">Kan lage ~0.006 L biogass 🔋</div>
+</div>
+</div>
+<!-- Tips -->
+<div class="card" style="background:rgba(74,222,128,.05);border-color:rgba(74,222,128,.15);">
+<div class="card-title">Hva kan skannes?</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+<div style="font-size:12px;color:var(--muted);">🍌 Fruktskrell</div>
+<div style="font-size:12px;color:var(--muted);">🥦 Grønnsaker</div>
+<div style="font-size:12px;color:var(--muted);">🍞 Gammelt brød</div>
+<div style="font-size:12px;color:var(--muted);">🥚 Matrester</div>
+<div style="font-size:12px;color:var(--muted);">☕ Kaffegrut</div>
+<div style="font-size:12px;color:var(--muted);">🍎 Frukt</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ════════ SCREEN: BØTTE ════════ -->
+<div class="screen" id="s-botte">
+<div class="page-header">
+<div class="page-title">🗑️ Legg til bøtte</div>
+<div class="page-sub">Koble din BioBin X-bøtte til appen</div>
+</div>
+<!-- Connected bins -->
+<div class="card">
+<div class="card-title">Mine bøtter (1)</div>
+<div class="activity-item">
+<div class="act-icon" style="background:rgba(74,222,128,.15);font-size:22px;">🗑️</div>
+<div class="act-text">
+<div class="act-main">BioBin X – Klasserom 7B</div>
+<div class="act-time" style="color:var(--green);">🟢 Tilkoblet · Batteri 87%</div>
+</div>
+<div style="font-size:11px;color:#ef4444;font-weight:700;cursor:pointer;">Fjern</div>
+</div>
+</div>
+<!-- Add new bin -->
+<div class="card" style="background:linear-gradient(135deg,rgba(74,222,128,.06),rgba(163,230,53,.03));border-color:rgba(74,222,128,.2);">
+<div class="card-title">Legg til ny bøtte</div>
+<!-- Step 1: Name -->
+<div style="margin-bottom:14px;">
+<div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px;">1. Gi bøtten et navn</div>
+<input id="bin-name" type="text" placeholder="F.eks. Klasserom 7B, Kantine..."
+style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;outline:none;"
+onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'">
+</div>
+<!-- Step 2: Connection method -->
+<div style="margin-bottom:14px;">
+<div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:8px;">2. Velg tilkoblingsmetode</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+<div id="btn-bt" onclick="selectConn('bt')" style="padding:12px;border-radius:12px;border:2px solid var(--green);background:rgba(74,222,128,.1);text-align:center;cursor:pointer;transition:all .2s;">
+<div style="font-size:22px;">📡</div>
+<div style="font-size:12px;font-weight:800;color:var(--green);margin-top:4px;">Bluetooth</div>
+</div>
+<div id="btn-wifi" onclick="selectConn('wifi')" style="padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;text-align:center;cursor:pointer;transition:all .2s;">
+<div style="font-size:22px;">📶</div>
+<div style="font-size:12px;font-weight:800;color:var(--muted);margin-top:4px;">WiFi</div>
+</div>
+</div>
+</div>
+<!-- Step 3: QR / ID -->
+<div style="margin-bottom:16px;">
+<div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px;">3. Skriv inn bøtte-ID eller skann QR</div>
+<div style="display:flex;gap:8px;">
+<input id="bin-id" type="text" placeholder="F.eks. BBX-2024-A3F9"
+style="flex:1;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-family:'Space Mono',monospace;font-size:13px;outline:none;letter-spacing:1px;"
+onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'">
+<div onclick="scanQR()" style="width:48px;height:48px;border-radius:12px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;flex-shrink:0;">📷</div>
+</div>
+</div>
+<!-- Connect button -->
+<div onclick="connectBin()" id="connect-btn"
+style="width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,var(--green2),var(--lime));text-align:center;font-size:15px;font-weight:900;color:#0a1a0c;cursor:pointer;transition:transform .15s;"
+onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform='scale(1)'">
+Koble til bøtte 🗑️
+</div>
+</div>
+<!-- Status message -->
+<div id="conn-status" style="display:none;" class="card">
+<div style="text-align:center;" id="conn-status-inner"></div>
+</div>
+<!-- Tips -->
+<div class="card" style="background:rgba(59,130,246,.06);border-color:rgba(59,130,246,.2);">
+<div style="display:flex;gap:12px;align-items:flex-start;">
+<div style="font-size:24px;">💡</div>
+<div>
+<div style="font-size:13px;font-weight:800;color:#60a5fa;">Tips</div>
+<div style="font-size:12px;color:#93c5fd;margin-top:4px;line-height:1.6;">
+Du finner bøtte-ID-en på klistremerket under BioBin X-bøtten. Sørg for at bøtten er slått på og innen 5 meter.
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ════════ SCREEN: STATISTIKK ════════ -->
+<div class="screen" id="s-stats">
+<div class="page-header">
+<div class="page-title">📊 Statistikk</div>
+<div class="page-sub">Klasse 7B · Oversikt over tid</div>
+</div>
+<!-- Period selector -->
+<div style="display:flex;gap:8px;margin:0 16px 14px;">
+<div id="per-uke" onclick="setPeriod('uke')" style="flex:1;padding:8px;border-radius:10px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.4);text-align:center;font-size:12px;font-weight:800;color:var(--green);cursor:pointer;">Uke</div>
+<div id="per-mnd" onclick="setPeriod('mnd')" style="flex:1;padding:8px;border-radius:10px;background:transparent;border:1px solid var(--border);text-align:center;font-size:12px;font-weight:800;color:var(--muted);cursor:pointer;">Måned</div>
+<div id="per-ar" onclick="setPeriod('ar')" style="flex:1;padding:8px;border-radius:10px;background:transparent;border:1px solid var(--border);text-align:center;font-size:12px;font-weight:800;color:var(--muted);cursor:pointer;">År</div>
+</div>
+<!-- Main chart -->
+<div class="card">
+<div class="card-title">Matavfall kastet (kg)</div>
+<div style="display:flex;align-items:flex-end;gap:6px;height:90px;margin-top:8px;" id="stat-bars">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--green2),rgba(74,222,128,.3));height:52px;"></div><div style="font-size:9px;font-weight:700;color:var(--muted);">Man</div></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--green2),rgba(74,222,128,.3));height:70px;"></div><div style="font-size:9px;font-weight:700;color:var(--muted);">Tir</div></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--green2),rgba(74,222,128,.3));height:45px;"></div><div style="font-size:9px;font-weight:700;color:var(--muted);">Ons</div></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--lime),rgba(163,230,53,.3));height:80px;box-shadow:0 0 10px rgba(163,230,53,.3);"></div><div style="font-size:9px;font-weight:700;color:var(--lime);">Tor</div></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--green2),rgba(74,222,128,.3));height:60px;"></div><div style="font-size:9px;font-weight:700;color:var(--muted);">Fre</div></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,rgba(74,222,128,.3),rgba(74,222,128,.1));height:20px;"></div><div style="font-size:9px;font-weight:700;color:var(--muted);">Lør</div></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,rgba(74,222,128,.3),rgba(74,222,128,.1));height:10px;"></div><div style="font-size:9px;font-weight:700;color:var(--muted);">Søn</div></div>
+</div>
+<div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+<div style="text-align:center;"><div style="font-size:10px;color:var(--muted);font-weight:700;">Totalt</div><div style="font-family:'Space Mono',monospace;font-size:16px;color:var(--green);font-weight:700;">34.1 kg</div></div>
+<div style="text-align:center;"><div style="font-size:10px;color:var(--muted);font-weight:700;">Snitt/dag</div><div style="font-family:'Space Mono',monospace;font-size:16px;color:var(--lime);font-weight:700;">4.9 kg</div></div>
+<div style="text-align:center;"><div style="font-size:10px;color:var(--muted);font-weight:700;">Rekord</div><div style="font-family:'Space Mono',monospace;font-size:16px;color:var(--yellow);font-weight:700;">8.2 kg</div></div>
+</div>
+</div>
+<!-- Trend cards -->
+<div class="stat-row">
+<div class="stat-card">
+<div class="s-icon">📈</div>
+<div class="s-val" style="color:var(--lime);">+23%</div>
+<div class="s-lbl">Mer enn forrige uke</div>
+</div>
+<div class="stat-card">
+<div class="s-icon">🏆</div>
+<div class="s-val" style="color:var(--yellow);">#4</div>
+<div class="s-lbl">Av 14 klasser</div>
+</div>
+<div class="stat-card">
+<div class="s-icon">⚡</div>
+<div class="s-val" style="color:var(--green);">8.4 L</div>
+<div class="s-lbl">Biogass denne uka</div>
+</div>
+<div class="stat-card">
+<div class="s-icon">🌿</div>
+<div class="s-val" style="color:#60a5fa;">12 kg</div>
+<div class="s-lbl">CO₂ spart uka</div>
+</div>
+</div>
+<!-- Top wasters -->
+<div class="card">
+<div class="card-title">Mest kastet denne uken</div>
+<div class="activity-item">
+<div class="act-icon">🍞</div>
+<div class="act-text"><div class="act-main">Brød og bakst</div><div class="act-time">12.4 kg · 36%</div></div>
+<div style="width:60px;"><div class="prog-track" style="height:8px;"><div class="prog-fill" style="width:36%;"></div></div></div>
+</div>
+<div class="activity-item">
+<div class="act-icon">🥦</div>
+<div class="act-text"><div class="act-main">Grønnsaker</div><div class="act-time">9.8 kg · 29%</div></div>
+<div style="width:60px;"><div class="prog-track" style="height:8px;"><div class="prog-fill" style="width:29%;"></div></div></div>
+</div>
+<div class="activity-item">
+<div class="act-icon">🍌</div>
+<div class="act-text"><div class="act-main">Fruktskrell</div><div class="act-time">7.2 kg · 21%</div></div>
+<div style="width:60px;"><div class="prog-track" style="height:8px;"><div class="prog-fill" style="width:21%;"></div></div></div>
+</div>
+<div class="activity-item" style="border:none;">
+<div class="act-icon">☕</div>
+<div class="act-text"><div class="act-main">Kaffegrut</div><div class="act-time">4.7 kg · 14%</div></div>
+<div style="width:60px;"><div class="prog-track" style="height:8px;"><div class="prog-fill" style="width:14%;"></div></div></div>
+</div>
+</div>
+</div>
+
+<!-- ════════ SCREEN: QUIZ (UPDATED) ════════ -->
+<div class="screen" id="s-quiz">
+<div class="page-header">
+<div class="page-title">🧪 Miljøquiz</div>
+<div class="page-sub">Test hva du vet – tjen poeng!</div>
+</div>
+<!-- Quiz hero -->
+<div class="card" style="background:linear-gradient(135deg,#1a1a00,#120f00);border-color:#4a3a00;text-align:center;">
+<div style="font-size:40px;margin-bottom:8px;">🧠</div>
+<div style="font-size:16px;font-weight:900;color:var(--yellow);">Dagens quiz</div>
+<div style="font-size:12px;color:#fef08a;margin-top:4px;">5 spørsmål · Opptil +250 ⭐</div>
+<div style="display:flex;justify-content:center;gap:6px;margin-top:12px;" id="q-dots">
+<div style="width:10px;height:10px;border-radius:50%;background:var(--yellow);"></div>
+<div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);"></div>
+<div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);"></div>
+<div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);"></div>
+<div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);"></div>
+</div>
+</div>
+<!-- Question card -->
+<div class="card" id="q-card">
+<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Spørsmål <span id="q-num">1</span> av 5</div>
+<div style="font-size:15px;font-weight:800;color:var(--text);line-height:1.5;margin-bottom:16px;" id="q-text">Hva er biogass laget av?</div>
+<div style="display:flex;flex-direction:column;gap:8px;" id="q-options">
+<div class="q-opt" onclick="answerQ(0)" style="padding:12px 14px;border-radius:12px;border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;">🌱 Organisk avfall og bakterier</div>
+<div class="q-opt" onclick="answerQ(1)" style="padding:12px 14px;border-radius:12px;border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;">🔋 Solenergi og batteri</div>
+<div class="q-opt" onclick="answerQ(2)" style="padding:12px 14px;border-radius:12px;border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;">💧 Vann og mineraler</div>
+<div class="q-opt" onclick="answerQ(3)" style="padding:12px 14px;border-radius:12px;border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;">🪨 Olje og kull</div>
+</div>
+<div id="q-feedback" style="display:none;margin-top:12px;padding:12px;border-radius:10px;font-size:13px;font-weight:700;"></div>
+<div id="q-next-btn" onclick="nextQuestion()" style="display:none;margin-top:12px;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--green2),var(--lime));text-align:center;font-size:14px;font-weight:900;color:#0a1a0c;cursor:pointer;">Neste spørsmål →</div>
+</div>
+<!-- Past quizzes -->
+<div class="card">
+<div class="card-title">Fullførte quizer</div>
+<div class="activity-item">
+<div class="act-icon">✅</div>
+<div class="act-text"><div class="act-main">Hva er anaerob nedbrytning?</div><div class="act-time">I går · 4/5 riktige</div></div>
+<div class="act-pts">+200 ⭐</div>
+</div>
+<div class="activity-item" style="border:none;">
+<div class="act-icon">✅</div>
+<div class="act-text"><div class="act-main">CO₂ og klimagasser</div><div class="act-time">For 2 dager siden · 5/5 riktige</div></div>
+<div class="act-pts">+250 ⭐</div>
+</div>
+</div>
+</div>
+
+<!-- ════════ SCREEN: VARSLER ════════ -->
+<div class="screen" id="s-varsler">
+<div class="page-header">
+<div class="page-title">🔔 Varsler</div>
+<div class="page-sub">Påminnelser og belønninger</div>
+</div>
+<!-- Unread notifications -->
+<div class="card" style="background:linear-gradient(135deg,rgba(251,146,60,.08),rgba(251,146,60,.03));border-color:rgba(251,146,60,.3);">
+<div class="card-title" style="color:var(--orange);">Nye varsler (3)</div>
+<div class="activity-item">
+<div class="act-icon" style="background:rgba(253,224,71,.1);">🏆</div>
+<div class="act-text"><div class="act-main" style="color:var(--yellow);">Ny prestasjon låst opp!</div><div class="act-time">«12 dager på rad» · Nå nettopp</div></div>
+<div class="act-pts" style="color:var(--yellow);">+200 ⭐</div>
+</div>
+<div class="activity-item">
+<div class="act-icon" style="background:rgba(167,139,250,.1);">🏫</div>
+<div class="act-text"><div class="act-main" style="color:#c4b5fd;">Klassen klatret til #4!</div><div class="act-time">Konkurranseranking oppdatert · 2t</div></div>
+<div style="font-size:11px;color:#a78bfa;font-weight:700;">NY</div>
+</div>
+<div class="activity-item" style="border:none;">
+<div class="act-icon" style="background:rgba(74,222,128,.1);">🗑️</div>
+<div class="act-text"><div class="act-main">BioBin X er nesten full</div><div class="act-time">Bøtten er 85% full · 3t</div></div>
+<div style="font-size:11px;color:var(--orange);font-weight:700;">!</div>
+</div>
+</div>
+<!-- Notification settings -->
+<div class="card">
+<div class="card-title">Varselinnstillinger</div>
+<div class="activity-item">
+<div class="act-icon">🗑️</div>
+<div class="act-text"><div class="act-main">Bøtte nesten full</div><div class="act-time">Varsle når over 80%</div></div>
+<div onclick="toggleSwitch(this)" style="width:42px;height:24px;background:var(--green2);border-radius:100px;position:relative;cursor:pointer;transition:background .2s;">
+<div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;right:2px;top:2px;transition:left .2s;"></div>
+</div>
+</div>
+<div class="activity-item">
+<div class="act-icon">⭐</div>
+<div class="act-text"><div class="act-main">Ny prestasjon</div><div class="act-time">Varsle ved nye achievements</div></div>
+<div onclick="toggleSwitch(this)" style="width:42px;height:24px;background:var(--green2);border-radius:100px;position:relative;cursor:pointer;transition:background .2s;">
+<div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;right:2px;top:2px;"></div>
+</div>
+</div>
+<div class="activity-item">
+<div class="act-icon">🏫</div>
+<div class="act-text"><div class="act-main">Klassekonkurranse</div><div class="act-time">Oppdateringer i rangeringen</div></div>
+<div onclick="toggleSwitch(this)" style="width:42px;height:24px;background:var(--green2);border-radius:100px;position:relative;cursor:pointer;transition:background .2s;">
+<div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;right:2px;top:2px;"></div>
+</div>
+</div>
+<div class="activity-item">
+<div class="act-icon">🧪</div>
+<div class="act-text"><div class="act-main">Daglig quiz</div><div class="act-time">Påminnelse kl. 09:00</div></div>
+<div onclick="toggleSwitch(this)" style="width:42px;height:24px;background:rgba(255,255,255,.1);border-radius:100px;position:relative;cursor:pointer;transition:background .2s;">
+<div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;left:2px;top:2px;"></div>
+</div>
+</div>
+<div class="activity-item" style="border:none;">
+<div class="act-icon">📅</div>
+<div class="act-text"><div class="act-main">Ukentlig oppsummering</div><div class="act-time">Hver fredag kl. 14:00</div></div>
+<div onclick="toggleSwitch(this)" style="width:42px;height:24px;background:var(--green2);border-radius:100px;position:relative;cursor:pointer;transition:background .2s;">
+<div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;right:2px;top:2px;"></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ════════ SCREEN: BELØNNINGER ════════ -->
+<div class="screen" id="s-rewards">
+<div class="page-header">
+<div class="page-title">🎁 Belønninger</div>
+<div class="page-sub">Bytt poeng mot premier!</div>
+</div>
+<!-- Points balance -->
+<div class="card" style="background:linear-gradient(135deg,#2a1a00,#1a1000);border-color:#4a3000;text-align:center;">
+<div style="font-size:11px;font-weight:800;color:#fef08a;letter-spacing:1px;text-transform:uppercase;">Dine poeng</div>
+<div style="font-family:'Space Mono',monospace;font-size:48px;font-weight:700;color:var(--yellow);text-shadow:0 0 20px rgba(253,224,71,.4);line-height:1.1;">1 240</div>
+<div style="font-size:12px;color:#fef08a;margin-top:4px;">⭐ tilgjengelig for bytte</div>
+</div>
+<!-- Rewards grid -->
+<div class="card" style="margin-bottom:10px;">
+<div class="card-title">Tilgjengelige premier</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 16px 14px;">
+<div onclick="claimReward(this,500,'Fri friminutt')" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;">
+<div style="font-size:32px;margin-bottom:6px;">🕐</div>
+<div style="font-size:13px;font-weight:800;color:var(--text);">Ekstra friminutt</div>
+<div style="font-size:11px;color:var(--muted);margin-top:4px;">10 min ekstra pause</div>
+<div style="margin-top:10px;padding:6px;border-radius:8px;background:rgba(253,224,71,.1);border:1px solid rgba(253,224,71,.3);font-size:12px;font-weight:800;color:var(--yellow);">500 ⭐</div>
+</div>
+<div onclick="claimReward(this,750,'Klimadiplom')" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;">
+<div style="font-size:32px;margin-bottom:6px;">📜</div>
+<div style="font-size:13px;font-weight:800;color:var(--text);">Klimadiplom</div>
+<div style="font-size:11px;color:var(--muted);margin-top:4px;">Offisielt miljødiplom</div>
+<div style="margin-top:10px;padding:6px;border-radius:8px;background:rgba(253,224,71,.1);border:1px solid rgba(253,224,71,.3);font-size:12px;font-weight:800;color:var(--yellow);">750 ⭐</div>
+</div>
+<div onclick="claimReward(this,1000,'Klassefilm')" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;">
+<div style="font-size:32px;margin-bottom:6px;">🎬</div>
+<div style="font-size:13px;font-weight:800;color:var(--text);">Filmtime i klassen</div>
+<div style="font-size:11px;color:var(--muted);margin-top:4px;">Klassens valg!</div>
+<div style="margin-top:10px;padding:6px;border-radius:8px;background:rgba(253,224,71,.1);border:1px solid rgba(253,224,71,.3);font-size:12px;font-weight:800;color:var(--yellow);">1 000 ⭐</div>
+</div>
+<div onclick="claimReward(this,1200,'BioBin X-klistremerker')" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;">
+<div style="font-size:32px;margin-bottom:6px;">🌿</div>
+<div style="font-size:13px;font-weight:800;color:var(--text);">BioBin X-klistremerker</div>
+<div style="font-size:11px;color:var(--muted);margin-top:4px;">Eksklusive stickers</div>
+<div style="margin-top:10px;padding:6px;border-radius:8px;background:rgba(253,224,71,.1);border:1px solid rgba(253,224,71,.3);font-size:12px;font-weight:800;color:var(--yellow);">1 200 ⭐</div>
+</div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;text-align:center;opacity:.4;">
+<div style="font-size:32px;margin-bottom:6px;">🎒</div>
+<div style="font-size:13px;font-weight:800;color:var(--text);">BioBin X-ryggsekk</div>
+<div style="font-size:11px;color:var(--muted);margin-top:4px;">Limited edition</div>
+<div style="margin-top:10px;padding:6px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);font-size:12px;font-weight:800;color:var(--muted);">🔒 2 500 ⭐</div>
+</div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;text-align:center;opacity:.4;">
+<div style="font-size:32px;margin-bottom:6px;">🌳</div>
+<div style="font-size:13px;font-weight:800;color:var(--text);">Plant et tre!</div>
+<div style="font-size:11px;color:var(--muted);margin-top:4px;">Vi planter et ekte tre</div>
+<div style="margin-top:10px;padding:6px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);font-size:12px;font-weight:800;color:var(--muted);">🔒 5 000 ⭐</div>
+</div>
+</div>
+<!-- Claimed -->
+<div class="card">
+<div class="card-title">Innløste premier</div>
+<div class="activity-item" style="border:none;">
+<div class="act-icon">📜</div>
+<div class="act-text"><div class="act-main">Klimadiplom</div><div class="act-time">Innløst 28. feb · Levert av lærer</div></div>
+<div style="font-size:11px;color:var(--green);font-weight:800;">✅</div>
+</div>
+</div>
+</div>
+<!-- screens end -->
+</div><!-- /phone-inner -->
 </div><!-- /phone -->
-
 </div><!-- /outer -->
-
 <!-- Toast -->
 <div class="toast" id="toast"></div>
-
 <script>
-  const screenMap = { home:'s-home', energy:'s-energy', env:'s-env', points:'s-points', class:'s-class', info:'s-info', profil:'s-profil', skann:'s-skann', botte:'s-botte', stats:'s-stats', quiz:'s-quiz', varsler:'s-varsler', rewards:'s-rewards' };
+const screenMap = { home:'s-home', energy:'s-energy', env:'s-env', points:'s-points', class:'s-class', info:'s-info', profil:'s-profil', skann:'s-skann', botte:'s-botte', stats:'s-stats', quiz:'s-quiz', varsler:'s-varsler', rewards:'s-rewards' };
+let activeScreen = 'home';
+let cameraStream = null;
 
-  function showScreen(id, navEl) {
+function showScreen(id, navEl) {
+    // Stop camera if leaving scan screen
+    if (activeScreen === 'skann' && id !== 'skann') {
+        stopCamera();
+    }
+
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById(screenMap[id]).classList.add('active');
     navEl.classList.add('active');
     document.getElementById(screenMap[id]).scrollTop = 0;
+    
+    activeScreen = id;
+    
+    // Start camera if entering scan screen
+    if (id === 'skann') {
+        startCamera();
+    }
+
     showToast(navEl.querySelector('.nav-icon').textContent);
-  }
+}
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    const labels = {
-      HJEM:'🏠 Hjem', ENERGI:'⚡ Energimåler', 'MILJØ':'🌍 Miljøeffekt',
-      POENG:'⭐ Mine poeng', KLASSE:'🏫 Klassekonkurranse', INFO:'ℹ️ Info',
-      PROFIL:'👤 Min profil', SKANN:'📸 Skann avfall', 'BØTTE':'➕ Legg til bøtte',
-      STATISTIKK:'📊 Statistikk', QUIZ:'🧪 Miljøquiz', VARSLER:'🔔 Varsler', PREMIER:'🎁 Belønninger'
-    };
-    t.textContent = labels[msg] || msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 1800);
-  }
+function showToast(msg) {
+const t = document.getElementById('toast');
+const labels = {
+HJEM:'🏠 Hjem', ENERGI:'⚡ Energimåler', 'MILJØ':'🌍 Miljøeffekt',
+POENG:'⭐ Mine poeng', KLASSE:'🏫 Klassekonkurranse', INFO:'ℹ️ Info',
+PROFIL:'👤 Min profil', SKANN:'📸 Skann avfall', 'BØTTE':'➕ Legg til bøtte',
+STATISTIKK:'📊 Statistikk', QUIZ:'🧪 Miljøquiz', VARSLER:'🔔 Varsler', PREMIER:'🎁 Belønninger'
+};
+t.textContent = labels[msg] || msg;
+t.classList.add('show');
+setTimeout(() => t.classList.remove('show'), 1800);
+}
 
-  // ── STATS PERIOD ──
-  function setPeriod(p) {
-    ['uke','mnd','ar'].forEach(id => {
-      const el = document.getElementById('per-'+id);
-      if (id === p) {
-        el.style.background = 'rgba(74,222,128,.15)';
-        el.style.borderColor = 'rgba(74,222,128,.4)';
-        el.style.color = 'var(--green)';
-      } else {
-        el.style.background = 'transparent';
-        el.style.borderColor = 'var(--border)';
-        el.style.color = 'var(--muted)';
-      }
-    });
-  }
+// ── CAMERA LOGIC ──
+async function startCamera() {
+    const video = document.getElementById('camera-feed');
+    const idle = document.getElementById('cam-idle');
+    
+    if (cameraStream) return; // Already running
 
-  // ── QUIZ LOGIC ──
-  const questions = [
-    { q:'Hva er biogass laget av?', opts:['🌱 Organisk avfall og bakterier','🔋 Solenergi og batteri','💧 Vann og mineraler','🪨 Olje og kull'], correct:0 },
-    { q:'Hvilken gass er den viktigste i biogass?', opts:['🌫️ CO₂ (karbondioksid)','🔥 Metan (CH₄)','💨 Oksygen (O₂)','⚗️ Nitrogen (N₂)'], correct:1 },
-    { q:'Hva kalles prosessen der bakterier bryter ned mat uten oksygen?', opts:['🌞 Fotosyntese','🧪 Anaerob nedbrytning','💧 Fordampning','🔥 Forbrenning'], correct:1 },
-    { q:'Hva er biogass et alternativ til?', opts:['🌊 Vannkraft','⛽ Fossil naturgass','☀️ Solenergi','💨 Vindenergi'], correct:1 },
-    { q:'Hva skjer med CO₂ når vi bruker biogass i stedet for søppelfylling?', opts:['CO₂ øker mye mer','CO₂ forblir det samme','Vi slipper ut mye mindre CO₂','CO₂ forsvinner helt'], correct:2 },
-  ];
-  let qIndex = 0, qScore = 0, qAnswered = false;
-
-  function renderQuestion() {
-    const q = questions[qIndex];
-    document.getElementById('q-num').textContent = qIndex + 1;
-    document.getElementById('q-text').textContent = q.q;
-    const opts = document.getElementById('q-options');
-    opts.innerHTML = '';
-    q.opts.forEach((o, i) => {
-      const d = document.createElement('div');
-      d.className = 'q-opt';
-      d.style.cssText = 'padding:12px 14px;border-radius:12px;border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;';
-      d.textContent = o;
-      d.onclick = () => answerQ(i);
-      opts.appendChild(d);
-    });
-    document.getElementById('q-feedback').style.display = 'none';
-    document.getElementById('q-next-btn').style.display = 'none';
-    // update dots
-    const dots = document.getElementById('q-dots').children;
-    for (let i = 0; i < dots.length; i++) {
-      dots[i].style.background = i === qIndex ? 'var(--yellow)' : 'rgba(255,255,255,.15)';
+    try {
+        // Request camera access
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: 'environment' } 
+        });
+        cameraStream = stream;
+        video.srcObject = stream;
+        video.style.display = 'block';
+        video.play();
+        idle.style.display = 'none'; // Hide placeholder when camera is ready
+    } catch (err) {
+        console.error("Camera error:", err);
+        idle.innerHTML = `<div style="font-size:40px;">⚠️</div><div style="font-size:12px;color:var(--orange);">Kamera tilgang nektet</div>`;
+        idle.style.display = 'block';
     }
+}
+
+function stopCamera() {
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+        const video = document.getElementById('camera-feed');
+        video.style.display = 'none';
+        video.srcObject = null;
+        // Reset UI
+        document.getElementById('cam-idle').style.display = 'block';
+        document.getElementById('cam-idle').innerHTML = `<span class="icon">🗑️</span><div style="font-size:13px;font-weight:700;color:var(--muted);">Pek mot matavfallet</div><div style="font-size:11px;color:#4a7a54;margin-top:4px;">Trykk 📸 for å skanne</div>`;
+    }
+}
+
+// ── STATS PERIOD ──
+function setPeriod(p) {
+['uke','mnd','ar'].forEach(id => {
+const el = document.getElementById('per-'+id);
+if (id === p) {
+el.style.background = 'rgba(74,222,128,.15)';
+el.style.borderColor = 'rgba(74,222,128,.4)';
+el.style.color = 'var(--green)';
+} else {
+el.style.background = 'transparent';
+el.style.borderColor = 'var(--border)';
+el.style.color = 'var(--muted)';
+}
+});
+}
+
+// ── RANDOM QUIZ LOGIC ──
+const allQuestions = [
+{ q:'Hva er biogass laget av?', opts:['🌱 Organisk avfall og bakterier','🔋 Solenergi og batteri','💧 Vann og mineraler','🪨 Olje og kull'], correct:0 },
+{ q:'Hvilken gass er den viktigste i biogass?', opts:['🌫️ CO₂ (karbondioksid)','🔥 Metan (CH₄)','💨 Oksygen (O₂)','⚗️ Nitrogen (N₂)'], correct:1 },
+{ q:'Hva kalles prosessen der bakterier bryter ned mat uten oksygen?', opts:['🌞 Fotosyntese','🧪 Anaerob nedbrytning','💧 Fordampning','🔥 Forbrenning'], correct:1 },
+{ q:'Hva er biogass et alternativ til?', opts:['🌊 Vannkraft','⛽ Fossil naturgass','☀️ Solenergi','💨 Vindenergi'], correct:1 },
+{ q:'Hva skjer med CO₂ når vi bruker biogass i stedet for søppelfylling?', opts:['CO₂ øker mye mer','CO₂ forblir det samme','Vi slipper ut mye mindre CO₂','CO₂ forsvinner helt'], correct:2 },
+{ q:'Hvor lang tid tar det vanligvis å lage biogass?', opts:['1 time','1 dag','2-4 uker','1 år'], correct:2 },
+{ q:'Hva kan IKKE kastes i BioBin X?', opts:['Eplekjerner','Plastemballasje','Brødskorper','Kaffegrut'], correct:1 },
+{ q:'Hva bruker vi restproduktet (bio-rest) til?', opts:['Brensel','Gjødsel','Byggematerialer','Medisin'], correct:1 },
+{ q:'Hvor mye energi kan 1 kg matavfall gi?', opts:['Like mye som 1 batteri','Nok til å lade en mobil 50 ganger','Ingen energi','Nok til å kjøre bil 100 km'], correct:1 },
+{ q:'Hvilken farge har metangass?', opts:['Grønn','Blå','Fargeløs','Rød'], correct:2 },
+{ q:'Hvorfor er det viktig å sortere matavfall?', opts:['Det ser pent ut','Det gir energi og mindre klimagasser','Det er lovpåbudt','Det lukter mindre'], correct:1 },
+{ q:'Hva skjer hvis plast havner i biogassanlegget?', opts:['Det blir til energi','Det må sorteres ut igjen','Det blir til gjødsel','Ingenting'], correct:1 },
+{ q:'Hvor mye matavfall kaster en gjennomsnittlig norsk husholdning per år?', opts:['10 kg','50 kg','100 kg','200 kg'], correct:2 },
+{ q:'Hva er hovedbestanddelen i biogass?', opts:['Oksygen','Hydrogen','Metan','Helium'], correct:2 },
+{ q:'Kan biogass brukes til bussdrift?', opts:['Ja, mange busser går på biogass','Nei, kun til strøm','Kun til tog','Kun til båter'], correct:0 },
+{ q:'Hva betyr 'kildesortering'?', opts:['Å sortere ved kilden (hjemme/skolen)','Å sortere etter farge','Å sortere etter vekt','Å sortere etter lukt'], correct:0 },
+{ q:'Hvilket land er ledende innen biogass?', opts:['Norge','Sverige','Tyskland','USA'], correct:1 },
+{ q:'Hva skjer med temperaturen i en biogassreaktor?', opts:['Den er kald','Den holdes varm (37-55°C)','Den fryser','Den varierer mye'], correct:1 },
+{ q:'Er biogass fornybar energi?', opts:['Ja','Nei','Kun delvis','Avhenger av været'], correct:0 },
+{ q:'Hva kan du gjøre for å hjelpe klimaet?', opts:['Sortere matavfall','Kaste alt i samme bøtte','Brenne maten','La det råtne ute'], correct:0 },
+];
+
+let currentQuizQuestions = [];
+let qIndex = 0, qScore = 0, qAnswered = false;
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function startNewQuiz() {
+    // Pick 5 random questions
+    const shuffled = shuffleArray([...allQuestions]);
+    currentQuizQuestions = shuffled.slice(0, 5);
+    qIndex = 0; 
+    qScore = 0; 
     qAnswered = false;
-  }
-
-  function answerQ(idx) {
-    if (qAnswered) return;
-    qAnswered = true;
-    const q = questions[qIndex];
-    const opts = document.getElementById('q-options').children;
-    const fb = document.getElementById('q-feedback');
-    if (idx === q.correct) {
-      opts[idx].style.background = 'rgba(74,222,128,.2)';
-      opts[idx].style.borderColor = 'var(--green)';
-      opts[idx].style.color = 'var(--green)';
-      fb.style.display = 'block';
-      fb.style.background = 'rgba(74,222,128,.1)';
-      fb.style.color = 'var(--green)';
-      fb.textContent = '✅ Riktig! +50 ⭐';
-      qScore++;
-    } else {
-      opts[idx].style.background = 'rgba(239,68,68,.1)';
-      opts[idx].style.borderColor = '#ef4444';
-      opts[idx].style.color = '#ef4444';
-      opts[q.correct].style.background = 'rgba(74,222,128,.15)';
-      opts[q.correct].style.borderColor = 'var(--green)';
-      fb.style.display = 'block';
-      fb.style.background = 'rgba(239,68,68,.08)';
-      fb.style.color = '#ef4444';
-      fb.textContent = '❌ Feil! Riktig svar var markert i grønt.';
-    }
-    const nb = document.getElementById('q-next-btn');
-    nb.style.display = 'block';
-    nb.textContent = qIndex < 4 ? 'Neste spørsmål →' : `Se resultater 🏆 (${qScore}/5)`;
-  }
-
-  function nextQuestion() {
-    if (qIndex < 4) {
-      qIndex++;
-      renderQuestion();
-    } else {
-      document.getElementById('q-card').innerHTML = `
-        <div style="text-align:center;padding:10px 0;">
-          <div style="font-size:48px;margin-bottom:12px;">${qScore >= 4 ? '🏆' : qScore >= 2 ? '👍' : '📚'}</div>
-          <div style="font-size:20px;font-weight:900;color:var(--yellow);">${qScore}/5 riktige!</div>
-          <div style="font-size:14px;color:var(--muted);margin-top:6px;">Du tjente <span style="color:var(--green);font-weight:800;">+${qScore*50} ⭐</span></div>
-          <div onclick="restartQuiz()" style="margin-top:16px;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--green2),var(--lime));font-size:14px;font-weight:900;color:#0a1a0c;cursor:pointer;">Ta quizen på nytt 🔄</div>
-        </div>`;
-    }
-  }
-
-  function restartQuiz() {
-    qIndex = 0; qScore = 0; qAnswered = false;
-    document.getElementById('q-card').innerHTML = `
-      <div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Spørsmål <span id="q-num">1</span> av 5</div>
-      <div style="font-size:15px;font-weight:800;color:var(--text);line-height:1.5;margin-bottom:16px;" id="q-text"></div>
-      <div style="display:flex;flex-direction:column;gap:8px;" id="q-options"></div>
-      <div id="q-feedback" style="display:none;margin-top:12px;padding:12px;border-radius:10px;font-size:13px;font-weight:700;"></div>
-      <div id="q-next-btn" onclick="nextQuestion()" style="display:none;margin-top:12px;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--green2),var(--lime));text-align:center;font-size:14px;font-weight:900;color:#0a1a0c;cursor:pointer;"></div>`;
     renderQuestion();
-  }
+}
 
-  // ── TOGGLE SWITCH ──
-  function toggleSwitch(sw) {
-    const dot = sw.querySelector('div');
-    const on = dot.style.right === '2px' || dot.style.right === '';
-    if (on) {
-      sw.style.background = 'rgba(255,255,255,.1)';
-      dot.style.right = 'auto'; dot.style.left = '2px';
-    } else {
-      sw.style.background = 'var(--green2)';
-      dot.style.left = 'auto'; dot.style.right = '2px';
-    }
-  }
+function renderQuestion() {
+const q = currentQuizQuestions[qIndex];
+document.getElementById('q-num').textContent = qIndex + 1;
+document.getElementById('q-text').textContent = q.q;
+const opts = document.getElementById('q-options');
+opts.innerHTML = '';
+q.opts.forEach((o, i) => {
+const d = document.createElement('div');
+d.className = 'q-opt';
+d.style.cssText = 'padding:12px 14px;border-radius:12px;border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;';
+d.textContent = o;
+d.onclick = () => answerQ(i);
+opts.appendChild(d);
+});
+document.getElementById('q-feedback').style.display = 'none';
+document.getElementById('q-next-btn').style.display = 'none';
+// update dots
+const dots = document.getElementById('q-dots').children;
+for (let i = 0; i < dots.length; i++) {
+dots[i].style.background = i === qIndex ? 'var(--yellow)' : 'rgba(255,255,255,.15)';
+}
+qAnswered = false;
+}
 
-  // ── REWARDS ──
-  let userPoints = 1240;
-  function claimReward(el, cost, name) {
-    if (userPoints < cost) {
-      showToast('Ikke nok poeng! 😢'); return;
-    }
-    userPoints -= cost;
-    el.style.opacity = '.5';
-    el.style.pointerEvents = 'none';
-    el.querySelector('div:last-child').textContent = '✅ Innløst!';
-    el.querySelector('div:last-child').style.color = 'var(--green)';
-    showToast('🎉 ' + name + ' innløst!');
-  }
+function answerQ(idx) {
+if (qAnswered) return;
+qAnswered = true;
+const q = currentQuizQuestions[qIndex];
+const opts = document.getElementById('q-options').children;
+const fb = document.getElementById('q-feedback');
+if (idx === q.correct) {
+opts[idx].style.background = 'rgba(74,222,128,.2)';
+opts[idx].style.borderColor = 'var(--green)';
+opts[idx].style.color = 'var(--green)';
+fb.style.display = 'block';
+fb.style.background = 'rgba(74,222,128,.1)';
+fb.style.color = 'var(--green)';
+fb.textContent = '✅ Riktig! +50 ⭐';
+qScore++;
+} else {
+opts[idx].style.background = 'rgba(239,68,68,.1)';
+opts[idx].style.borderColor = '#ef4444';
+opts[idx].style.color = '#ef4444';
+opts[q.correct].style.background = 'rgba(74,222,128,.15)';
+opts[q.correct].style.borderColor = 'var(--green)';
+fb.style.display = 'block';
+fb.style.background = 'rgba(239,68,68,.08)';
+fb.style.color = '#ef4444';
+fb.textContent = '❌ Feil! Riktig svar var markert i grønt.';
+}
+const nb = document.getElementById('q-next-btn');
+nb.style.display = 'block';
+nb.textContent = qIndex < 4 ? 'Neste spørsmål →' : `Se resultater 🏆 (${qScore}/5)`;
+}
 
-  // ── BIN CONNECTION LOGIC ──
-  let selectedConn = 'bt';
+function nextQuestion() {
+if (qIndex < 4) {
+qIndex++;
+renderQuestion();
+} else {
+document.getElementById('q-card').innerHTML = `
+<div style="text-align:center;padding:10px 0;">
+<div style="font-size:48px;margin-bottom:12px;">${qScore >= 4 ? '🏆' : qScore >= 2 ? '👍' : '📚'}</div>
+<div style="font-size:20px;font-weight:900;color:var(--yellow);">${qScore}/5 riktige!</div>
+<div style="font-size:14px;color:var(--muted);margin-top:6px;">Du tjente <span style="color:var(--green);font-weight:800;">+${qScore*50} ⭐</span></div>
+<div onclick="restartQuiz()" style="margin-top:16px;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--green2),var(--lime));font-size:14px;font-weight:900;color:#0a1a0c;cursor:pointer;">Ta quizen på nytt 🔄</div>
+</div>`;
+}
+}
 
-  function selectConn(type) {
-    selectedConn = type;
-    const btBtn = document.getElementById('btn-bt');
-    const wifiBtn = document.getElementById('btn-wifi');
-    if (type === 'bt') {
-      btBtn.style.border = '2px solid var(--green)';
-      btBtn.style.background = 'rgba(74,222,128,.1)';
-      btBtn.querySelector('div:last-child').style.color = 'var(--green)';
-      wifiBtn.style.border = '1px solid var(--border)';
-      wifiBtn.style.background = 'transparent';
-      wifiBtn.querySelector('div:last-child').style.color = 'var(--muted)';
-    } else {
-      wifiBtn.style.border = '2px solid var(--green)';
-      wifiBtn.style.background = 'rgba(74,222,128,.1)';
-      wifiBtn.querySelector('div:last-child').style.color = 'var(--green)';
-      btBtn.style.border = '1px solid var(--border)';
-      btBtn.style.background = 'transparent';
-      btBtn.querySelector('div:last-child').style.color = 'var(--muted)';
-    }
-  }
+function restartQuiz() {
+startNewQuiz();
+// Re-inject the card structure
+document.getElementById('q-card').innerHTML = `
+<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Spørsmål <span id="q-num">1</span> av 5</div>
+<div style="font-size:15px;font-weight:800;color:var(--text);line-height:1.5;margin-bottom:16px;" id="q-text"></div>
+<div style="display:flex;flex-direction:column;gap:8px;" id="q-options"></div>
+<div id="q-feedback" style="display:none;margin-top:12px;padding:12px;border-radius:10px;font-size:13px;font-weight:700;"></div>
+<div id="q-next-btn" onclick="nextQuestion()" style="display:none;margin-top:12px;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--green2),var(--lime));text-align:center;font-size:14px;font-weight:900;color:#0a1a0c;cursor:pointer;"></div>`;
+renderQuestion();
+}
 
-  function scanQR() {
-    const idField = document.getElementById('bin-id');
-    idField.value = 'Skanner QR...';
-    idField.style.color = 'var(--muted)';
-    setTimeout(() => {
-      idField.value = 'BBX-2024-' + Math.random().toString(36).substring(2,6).toUpperCase();
-      idField.style.color = 'var(--green)';
-    }, 1200);
-  }
+// ── TOGGLE SWITCH ──
+function toggleSwitch(sw) {
+const dot = sw.querySelector('div');
+const on = dot.style.right === '2px' || dot.style.right === '';
+if (on) {
+sw.style.background = 'rgba(255,255,255,.1)';
+dot.style.right = 'auto'; dot.style.left = '2px';
+} else {
+sw.style.background = 'var(--green2)';
+dot.style.left = 'auto'; dot.style.right = '2px';
+}
+}
 
-  function connectBin() {
-    const name = document.getElementById('bin-name').value.trim();
-    const id   = document.getElementById('bin-id').value.trim();
-    const status = document.getElementById('conn-status');
-    const inner  = document.getElementById('conn-status-inner');
+// ── REWARDS ──
+let userPoints = 1240;
+function claimReward(el, cost, name) {
+if (userPoints < cost) {
+showToast('Ikke nok poeng! 😢'); return;
+}
+userPoints -= cost;
+el.style.opacity = '.5';
+el.style.pointerEvents = 'none';
+el.querySelector('div:last-child').textContent = '✅ Innløst!';
+el.querySelector('div:last-child').style.color = 'var(--green)';
+showToast('🎉 ' + name + ' innløst!');
+}
 
-    if (!name || !id) {
-      status.style.display = 'block';
-      status.style.borderColor = 'rgba(239,68,68,.4)';
-      inner.innerHTML = '<div style="font-size:24px;margin-bottom:8px;">⚠️</div><div style="font-size:13px;font-weight:800;color:#ef4444;">Fyll inn navn og bøtte-ID!</div>';
-      return;
-    }
+// ── BIN CONNECTION LOGIC ──
+let selectedConn = 'bt';
+function selectConn(type) {
+selectedConn = type;
+const btBtn = document.getElementById('btn-bt');
+const wifiBtn = document.getElementById('btn-wifi');
+if (type === 'bt') {
+btBtn.style.border = '2px solid var(--green)';
+btBtn.style.background = 'rgba(74,222,128,.1)';
+btBtn.querySelector('div:last-child').style.color = 'var(--green)';
+wifiBtn.style.border = '1px solid var(--border)';
+wifiBtn.style.background = 'transparent';
+wifiBtn.querySelector('div:last-child').style.color = 'var(--muted)';
+} else {
+wifiBtn.style.border = '2px solid var(--green)';
+wifiBtn.style.background = 'rgba(74,222,128,.1)';
+wifiBtn.querySelector('div:last-child').style.color = 'var(--green)';
+btBtn.style.border = '1px solid var(--border)';
+btBtn.style.background = 'transparent';
+btBtn.querySelector('div:last-child').style.color = 'var(--muted)';
+}
+}
+function scanQR() {
+const idField = document.getElementById('bin-id');
+idField.value = 'Skanner QR...';
+idField.style.color = 'var(--muted)';
+setTimeout(() => {
+idField.value = 'BBX-2024-' + Math.random().toString(36).substring(2,6).toUpperCase();
+idField.style.color = 'var(--green)';
+}, 1200);
+}
+function connectBin() {
+const name = document.getElementById('bin-name').value.trim();
+const id   = document.getElementById('bin-id').value.trim();
+const status = document.getElementById('conn-status');
+const inner  = document.getElementById('conn-status-inner');
+if (!name || !id) {
+status.style.display = 'block';
+status.style.borderColor = 'rgba(239,68,68,.4)';
+inner.innerHTML = '<div style="font-size:24px;margin-bottom:8px;">⚠️</div><div style="font-size:13px;font-weight:800;color:#ef4444;">Fyll inn navn og bøtte-ID!</div>';
+return;
+}
+// Show searching
+status.style.display = 'block';
+status.style.borderColor = 'rgba(74,222,128,.2)';
+inner.innerHTML = '<div style="font-size:13px;font-weight:800;color:var(--muted);">🔍 Søker etter bøtte...</div>';
+setTimeout(() => {
+inner.innerHTML = '<div style="font-size:13px;font-weight:800;color:var(--muted);">📡 Kobler til via ' + (selectedConn === 'bt' ? 'Bluetooth' : 'WiFi') + '...</div>';
+}, 1000);
+setTimeout(() => {
+status.style.borderColor = 'rgba(74,222,128,.3)';
+inner.innerHTML = `
+<div style="font-size:32px;margin-bottom:8px;">✅</div>
+<div style="font-size:15px;font-weight:900;color:var(--green);">${name} er tilkoblet!</div>
+<div style="font-size:12px;color:var(--muted);margin-top:6px;">ID: ${id} · ${selectedConn === 'bt' ? '📡 Bluetooth' : '📶 WiFi'}</div>
+`;
+document.getElementById('bin-name').value = '';
+document.getElementById('bin-id').value = '';
+}, 2400);
+}
 
-    // Show searching
-    status.style.display = 'block';
-    status.style.borderColor = 'rgba(74,222,128,.2)';
-    inner.innerHTML = '<div style="font-size:13px;font-weight:800;color:var(--muted);">🔍 Søker etter bøtte...</div>';
+// ── SCAN LOGIC ──
+const wasteItems = [
+{ emoji:'🍌', name:'Bananskall',      weight:'0.12 kg', pts:'+5 ⭐',  bio:'~0.006 L biogass 🔋', bar:18 },
+{ emoji:'🥦', name:'Grønnsaksskrell', weight:'0.28 kg', pts:'+10 ⭐', bio:'~0.014 L biogass 🔋', bar:42 },
+{ emoji:'🍞', name:'Gammelt brød',    weight:'0.45 kg', pts:'+15 ⭐', bio:'~0.022 L biogass 🔋', bar:65 },
+{ emoji:'🍎', name:'Eple',            weight:'0.20 kg', pts:'+8 ⭐',  bio:'~0.010 L biogass 🔋', bar:30 },
+{ emoji:'☕', name:'Kaffegrut',       weight:'0.10 kg', pts:'+5 ⭐',  bio:'~0.005 L biogass 🔋', bar:15 },
+{ emoji:'🥚', name:'Eggeskall',       weight:'0.06 kg', pts:'+3 ⭐',  bio:'~0.003 L biogass 🔋', bar:10 },
+{ emoji:'🍊', name:'Appelsinskall',   weight:'0.15 kg', pts:'+6 ⭐',  bio:'~0.007 L biogass 🔋', bar:22 },
+];
+let scanning = false;
+function doScan() {
+if (scanning) return;
+if (!cameraStream) {
+    // If camera failed to load, allow simulation anyway
+    startCamera(); 
+}
+scanning = true;
+// Flash effect
+const area = document.getElementById('cam-area');
+area.style.background = 'rgba(74,222,128,.2)';
+setTimeout(() => area.style.background = '#000', 200);
+// Show scanning state
+document.getElementById('cam-idle').style.display = 'none';
+document.getElementById('cam-result').style.display = 'none';
+document.getElementById('result-card').style.display = 'none';
+// Pick random waste item
+const item = wasteItems[Math.floor(Math.random() * wasteItems.length)];
+setTimeout(() => {
+// Show result in viewfinder
+const cr = document.getElementById('cam-result');
+cr.style.display = 'block';
+cr.style.animation = 'popIn .4s ease';
+document.getElementById('result-emoji').textContent = item.emoji;
+document.getElementById('result-name').textContent = item.name + ' oppdaget!';
+document.getElementById('result-weight').textContent = 'Estimert vekt: ' + item.weight;
+// Show result card below
+const rc = document.getElementById('result-card');
+rc.style.display = 'block';
+document.getElementById('rc-emoji').textContent = item.emoji;
+document.getElementById('rc-name').textContent = item.name;
+document.getElementById('rc-weight').textContent = item.weight + ' · Matavfall ✅';
+document.getElementById('rc-pts').textContent = item.pts;
+document.getElementById('rc-bio').textContent = 'Kan lage ' + item.bio;
+setTimeout(() => { document.getElementById('rc-bar').style.width = item.bar + '%'; }, 100);
+scanning = false;
+}, 1200);
+}
+function resetScan() {
+scanning = false;
+document.getElementById('cam-idle').style.display = 'block';
+document.getElementById('cam-result').style.display = 'none';
+document.getElementById('result-card').style.display = 'none';
+document.getElementById('rc-bar').style.width = '0%';
+}
 
-    setTimeout(() => {
-      inner.innerHTML = '<div style="font-size:13px;font-weight:800;color:var(--muted);">📡 Kobler til via ' + (selectedConn === 'bt' ? 'Bluetooth' : 'WiFi') + '...</div>';
-    }, 1000);
+// Initialize
+setTimeout(() => {
+document.getElementById('waste-bar').style.width = '48%';
+startNewQuiz(); // Initialize random quiz
+}, 300);
 
-    setTimeout(() => {
-      status.style.borderColor = 'rgba(74,222,128,.3)';
-      inner.innerHTML = `
-        <div style="font-size:32px;margin-bottom:8px;">✅</div>
-        <div style="font-size:15px;font-weight:900;color:var(--green);">${name} er tilkoblet!</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:6px;">ID: ${id} · ${selectedConn === 'bt' ? '📡 Bluetooth' : '📶 WiFi'}</div>
-      `;
-      document.getElementById('bin-name').value = '';
-      document.getElementById('bin-id').value = '';
-    }, 2400);
-  }
-
-  // ── SCAN LOGIC ──
-  const wasteItems = [
-    { emoji:'🍌', name:'Bananskall',      weight:'0.12 kg', pts:'+5 ⭐',  bio:'~0.006 L biogass 🔋', bar:18 },
-    { emoji:'🥦', name:'Grønnsaksskrell', weight:'0.28 kg', pts:'+10 ⭐', bio:'~0.014 L biogass 🔋', bar:42 },
-    { emoji:'🍞', name:'Gammelt brød',    weight:'0.45 kg', pts:'+15 ⭐', bio:'~0.022 L biogass 🔋', bar:65 },
-    { emoji:'🍎', name:'Eple',            weight:'0.20 kg', pts:'+8 ⭐',  bio:'~0.010 L biogass 🔋', bar:30 },
-    { emoji:'☕', name:'Kaffegrut',       weight:'0.10 kg', pts:'+5 ⭐',  bio:'~0.005 L biogass 🔋', bar:15 },
-    { emoji:'🥚', name:'Eggeskall',       weight:'0.06 kg', pts:'+3 ⭐',  bio:'~0.003 L biogass 🔋', bar:10 },
-    { emoji:'🍊', name:'Appelsinskall',   weight:'0.15 kg', pts:'+6 ⭐',  bio:'~0.007 L biogass 🔋', bar:22 },
-  ];
-
-  let scanning = false;
-
-  function doScan() {
-    if (scanning) return;
-    scanning = true;
-
-    // Flash effect
-    const area = document.getElementById('cam-area');
-    area.style.background = 'rgba(74,222,128,.2)';
-    setTimeout(() => area.style.background = '#0a1a0c', 200);
-
-    // Show scanning state
-    document.getElementById('cam-idle').style.display = 'none';
-    document.getElementById('cam-result').style.display = 'none';
-    document.getElementById('result-card').style.display = 'none';
-
-    // Pick random waste item
-    const item = wasteItems[Math.floor(Math.random() * wasteItems.length)];
-
-    setTimeout(() => {
-      // Show result in viewfinder
-      const cr = document.getElementById('cam-result');
-      cr.style.display = 'block';
-      cr.style.animation = 'popIn .4s ease';
-      document.getElementById('result-emoji').textContent = item.emoji;
-      document.getElementById('result-name').textContent = item.name + ' oppdaget!';
-      document.getElementById('result-weight').textContent = 'Estimert vekt: ' + item.weight;
-
-      // Show result card below
-      const rc = document.getElementById('result-card');
-      rc.style.display = 'block';
-      document.getElementById('rc-emoji').textContent = item.emoji;
-      document.getElementById('rc-name').textContent = item.name;
-      document.getElementById('rc-weight').textContent = item.weight + ' · Matavfall ✅';
-      document.getElementById('rc-pts').textContent = item.pts;
-      document.getElementById('rc-bio').textContent = 'Kan lage ' + item.bio;
-      setTimeout(() => { document.getElementById('rc-bar').style.width = item.bar + '%'; }, 100);
-
-      scanning = false;
-    }, 1200);
-  }
-
-  function resetScan() {
-    scanning = false;
-    document.getElementById('cam-idle').style.display = 'block';
-    document.getElementById('cam-result').style.display = 'none';
-    document.getElementById('result-card').style.display = 'none';
-    document.getElementById('rc-bar').style.width = '0%';
-  }
-
-  // Animate bars on load
-  setTimeout(() => {
-    document.getElementById('waste-bar').style.width = '48%';
-    renderQuestion();
-  }, 300);
-
-  // Live "sensor" simulation – nudge waste number
-  let wasteKg = 2.4;
-  setInterval(() => {
-    const screens = document.querySelectorAll('.screen.active');
-    if (!screens.length) return;
-    if (screens[0].id !== 's-home') return;
-    const bump = (Math.random() * 0.05).toFixed(2);
-    wasteKg = Math.min(5, wasteKg + parseFloat(bump));
-    const el = document.getElementById('waste-num');
-    if (el) el.innerHTML = wasteKg.toFixed(1) + '<span style="font-size:22px"> kg</span>';
-    const pct = Math.min(100, (wasteKg / 5 * 100)).toFixed(0);
-    const bar = document.getElementById('waste-bar');
-    if (bar) bar.style.width = pct + '%';
-  }, 8000);
+// Live "sensor" simulation – nudge waste number
+let wasteKg = 2.4;
+setInterval(() => {
+const screens = document.querySelectorAll('.screen.active');
+if (!screens.length) return;
+if (screens[0].id !== 's-home') return;
+const bump = (Math.random() * 0.05).toFixed(2);
+wasteKg = Math.min(5, wasteKg + parseFloat(bump));
+const el = document.getElementById('waste-num');
+if (el) el.innerHTML = wasteKg.toFixed(1) + '<span style="font-size:22px"> kg</span>';
+const pct = Math.min(100, (wasteKg / 5 * 100)).toFixed(0);
+const bar = document.getElementById('waste-bar');
+if (bar) bar.style.width = pct + '%';
+}, 8000);
 </script>
 </body>
 </html>
+```
