@@ -1,0 +1,37 @@
+
+> biobin-x@1.0.0 dev
+> next dev
+
+▲ Next.js 16.2.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.50:3000
+- Environments: .env.local
+✓ Ready in 977ms
+
+ GET / 200 in 1469ms (next.js: 1354ms, application-code: 115ms)
+[browser] [2026-05-07T04:57:58.994Z]  @firebase/firestore: Firestore (12.11.0): enableIndexedDbPersistence() will be deprecated in the future, you can use `FirestoreSettings.cache` instead. (firebase/config.js:26:31)
+[browser] Error loading user data: FirebaseError: Missing or insufficient permissions.
+FirebaseError: Missing or insufficient permissions. (hooks/useAuth.js:23:17)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET / 304 in 64ms (next.js: 16ms, application-code: 48ms)
+[browser] [2026-05-07T04:58:51.839Z]  @firebase/firestore: Firestore (12.11.0): enableIndexedDbPersistence() will be deprecated in the future, you can use `FirestoreSettings.cache` instead. (firebase/config.js:26:31)
+[browser] Error loading user data: FirebaseError: Missing or insufficient permissions.
+FirebaseError: Missing or insufficient permissions. (hooks/useAuth.js:23:17)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+[browser] Login error: FirebaseError: Missing or insufficient permissions.
+FirebaseError: Missing or insufficient permissions. (pages/auth/login.js:42:15)
+[browser] Login error: FirebaseError: Missing or insufficient permissions.
+FirebaseError: Missing or insufficient permissions. (pages/auth/login.js:42:15)
+✓ Compiled in 2.9s
+✓ Compiled in 546ms
+✓ Compiled in 443ms
+✓ Compiled in 510ms
+✓ Compiled in 683ms
+✓ Compiled in 620ms
+✓ Compiled in 698ms
+✓ Compiled in 673ms
+✓ Compiled in 659ms
+✓ Compiled in 694ms
+✓ Compiled in 605ms
+✓ Compiled in 759ms
+✓ Compiled in 597ms
